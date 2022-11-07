@@ -16,6 +16,11 @@ public class Main {
         } else if (role == "receptionist") {
             Receptionist receptionist = new Receptionist();
             receptionist.LandingPageMenu();
+        } else if (role == "manager") {
+            Manager manager = new Manager();
+            manager.LandingPageMenu();
+        } else if (role == "mechanic") {
+            
         }
     }
 }

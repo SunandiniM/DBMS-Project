@@ -18,7 +18,7 @@ public class Manager {
                 AddEmployees();
                 LandingPageMenu();
             case 3:
-
+                break;
             default:
                 LandingPageMenu();
         }

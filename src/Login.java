@@ -8,7 +8,7 @@ public class Login {
         System.out.println("Enter your password:");
         String password = in.nextLine();
         // JDBC ->
-        String role = "receptionist";
+        String role = "manager";
         // check from JDBC if the user exists and return the role
         // based on the role create the landing page
         return role;
