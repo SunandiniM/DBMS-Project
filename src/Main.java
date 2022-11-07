@@ -4,5 +4,12 @@ public class Main {
         String role = loginObj.AskLogin();
         System.out.println(role);
         // based on role give the landing pages
+
+        if (role == "Admin") {
+            AdminLandingPage adminLandingPageObj = new AdminLandingPage();
+            adminLandingPageObj.AskAdmin();
+        }else if (role == "customer") {
+            
+        }
     }
 }

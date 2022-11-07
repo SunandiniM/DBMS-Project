@@ -16,7 +16,8 @@ public class StoreInfo {
                 System.out.println("Enter Address:");
                 String address = in.nextLine();
                 // GET MANAGER's information
-
+                Manager m = new Manager();
+                m.AskManager();
                 System.out.println("Get Min wage for mechnics");
                 double minWage = in.nextDouble();
                 System.out.println("Get Max wage for mechanics");
