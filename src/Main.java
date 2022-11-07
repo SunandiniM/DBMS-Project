@@ -3,10 +3,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        DBConnection dbConn = DBConnection.getDBConnection();
-        dbConn.createConnection();
-        dbConn.testrun();
-        dbConn.closeConnection();
         System.out.println("Press 1 to Log In");
         System.out.println("Press 2 to Exit");
 
