@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class DBConnection {
     protected static final String jdbcUrl = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
-    private static Connection conn;
+    public static Connection conn;
     private final String dbUserName, dbPassword;
     private static DBConnection dbConnection;
     private DBConnection() {
@@ -48,9 +48,12 @@ public class DBConnection {
 
     void testrun() {
         try{
+            int serviceId = 101;
+            String serviceName = "Engine Repair";
             Class.forName("oracle.jdbc.driver.OracleDriver");
-            Statement stmt=conn.createStatement();
-            ResultSet rs=stmt.executeQuery("select * from EMPLOYEES");
+            Statement stmt = conn.createStatement();
+            String sql = "INSERT INTO SERVICE VALUES ('" + serviceId + "', '" + serviceName + "')";
+            stmt.execute(sql);
             System.out.println("Completed Query Execution");
         } catch(Exception e) {
             ((PrintStream) null).println(e);

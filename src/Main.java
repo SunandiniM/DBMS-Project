@@ -1,25 +1,18 @@
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
         System.out.println("Press 1 to Log In");
         System.out.println("Press 2 to Exit");
 
         Scanner in = new Scanner(System.in);
         int option = in.nextInt();
-        DBConnection dbConn;
         while (option != 2) {
-            try {
-                dbConn = DBConnection.getDBConnection();
-                dbConn.createConnection();
-            } catch (Exception e) {
-                System.out.println("Failed to connect to the database");
-                System.out.println(e);
-                return;
-            }
+
             in = new Scanner(System.in);
             Login loginObj = new Login();
-            String role = loginObj.AskLogin(in, dbConn);
+            String role = loginObj.AskLogin(in);
             // based on role give the landing pages
 
             if (role == "admin") {
