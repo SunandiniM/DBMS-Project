@@ -12,10 +12,14 @@ public class SystemSetup {
         switch (option){
             case 1:
                 // system setup object initialise
+                Service service = new Service();
+                service.AskService();
             case 2:
                 // Add a new store
+                StoreInfo storeInfo = new StoreInfo();
+                storeInfo.AskStoreInfo();
             case 3:
-                // Add a new service
+                return;
             default:
                 AskSystemSetup();
         }

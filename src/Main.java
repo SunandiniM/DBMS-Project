@@ -1,7 +1,10 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
         Login loginObj = new Login();
-        String role = loginObj.AskLogin();
+        String role = loginObj.AskLogin(in);
         System.out.println(role);
         // based on role give the landing pages
 
@@ -10,6 +13,9 @@ public class Main {
             adminLandingPageObj.AskAdmin();
         }else if (role == "customer") {
 
+        } else if (role == "receptionist") {
+            Receptionist receptionist = new Receptionist();
+            receptionist.LandingPageMenu();
         }
     }
 }
