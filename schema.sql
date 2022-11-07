@@ -1,6 +1,22 @@
 REM   Script: P1
 REM   P1 part 1
 
+drop table OFFERS;
+drop table OWNS;
+drop table WORKSIN;
+drop table CUSTOMER;
+drop table VEHICLE;
+drop table HOURLY_EMPLOYEE;
+drop table HOURLY_EMPLOYEE_SCHEDULE;
+drop table EMPLOYEES;
+drop table MAINTAINANCE_SERVICE;
+drop table REPAIR_SERVICE;
+drop table SERVICE_CENTER;
+drop table SERVICE;
+drop table INVOICE;
+drop table SERVICE_EVENT;
+
+
 create table SERVICE_CENTER(  
     SCID number(9) primary key,  
     ADDRESS varchar(40),  
@@ -18,20 +34,6 @@ create table EMPLOYEES(
     EROLE varchar(12),  
     PRIMARY KEY(EMPID, SCID),  
     FOREIGN KEY(SCID) REFERENCES SERVICE_CENTER ON DELETE CASCADE  
-);
-
-create table HOURLY_EMPLOYEE(  
-    SCID number(9),  
-    EMPID number(9),  
-    HOURS_WORKED number(2), 
-    PRIMARY KEY(EMPID, SCID),  
-    FOREIGN KEY(EMPID, SCID) REFERENCES EMPLOYEES ON DELETE CASCADE 
-    /*CONSTRAINT checkIfHourlyEmployee*/ 
-    /*CHECK( (SELECT COUNT (*) 
-    FROM HOURLY_EMPLOYEE HE, EMPLOYEES E 
-    WHERE HE.SCID = E.SCID  
-    AND HE.EMPID = E.EMPID 
-    AND EROLE <> 'MECHANIC') = 0 )*/ 
 );
 
 create table WORKSIN(  
@@ -99,6 +101,39 @@ create table OFFERS(
     PRIMARY KEY(SCID, SID, MFG), 
     FOREIGN KEY(SCID) REFERENCES SERVICE_CENTER ON DELETE CASCADE, 
     FOREIGN KEY(SID) REFERENCES SERVICE ON DELETE CASCADE 
+);
+
+create table INVOICE (
+    BILL number(7),
+    STATUS number(1),
+    ORDER_ID number(9),
+
+    PRIMARY KEY(ORDER_ID)
+);
+
+create table SERVICE_EVENT (
+    ORDER_ID number(9),
+    SCID number(9),
+    CID number(9),
+    SID number(9),
+
+    PRIMARY KEY(SCID, CID, SID),
+    FOREIGN KEY(SCID) REFERENCES SERVICE_CENTER ON DELETE CASCADE,
+    FOREIGN KEY(SCID, CID) REFERENCES CUSTOMER ON DELETE CASCADE,
+    FOREIGN KEY(SID) REFERENCES SERVICE ON DELETE CASCADE,
+    FOREIGN KEY(ORDER_ID) REFERENCES INVOICE ON DELETE CASCADE
+);
+
+create table HOURLY_EMPLOYEE_SCHEDULE(
+    SCID number(9),
+    ORDER_ID number(9),
+    EMPID number(9),
+    WEEK number(1),
+    DAY number(1),
+    SLOTS_FILLED number(2),
+    PRIMARY KEY(EMPID, SCID),
+    FOREIGN KEY(EMPID, SCID) REFERENCES EMPLOYEES ON DELETE CASCADE,
+    FOREIGN KEY(ORDER_ID) REFERENCES INVOICE ON DELETE CASCADE
 );
 
 CREATE TRIGGER addingHourlyEmployee 
