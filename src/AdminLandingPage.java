@@ -37,7 +37,7 @@ public class AdminLandingPage {
                         DBConnection dbConn = DBConnection.getDBConnection();
                         dbConn.createConnection();
                         Statement stmt = dbConn.conn.createStatement();
-                        String sql = "INSERT INTO SERVICE VALUES ('" + serviceId + "', '" + serviceName + "');";
+                        String sql = "INSERT INTO SERVICE VALUES ('" + serviceId + "', '" + serviceName + "')";
                         stmt.executeUpdate(sql);
                         sql = "INSERT INTO REPAIR_SERVICE VALUES ('" + serviceId + "', '" + serviceCategory + "')";
                         stmt.executeUpdate(sql);
