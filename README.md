@@ -4,7 +4,7 @@ CS 540
 
 # Team Members
 
-Akash Sarda - aksarda
-Vinita Ramnani - vjramnan
-Venkata Sai Teja Malapati - vmalapa
+Akash Sarda - aksarda <br/>
+Vinita Ramnani - vjramnan <br/>
+Venkata Sai Teja Malapati - vmalapa <br/>
 Sunandini Medisetti - smedise
