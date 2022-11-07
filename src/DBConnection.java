@@ -23,7 +23,8 @@ public class DBConnection {
         return dbConnection;
     }
 
-    public Connection createConnection() throws SQLException {
+    public Connection createConnection() throws SQLException, ClassNotFoundException {
+        Class.forName("oracle.jdbc.driver.OracleDriver");
         if (jdbcUrl == null){
             throw new SQLException("URL NULL", "08001");
         }
@@ -48,21 +49,9 @@ public class DBConnection {
     void testrun() {
         try{
             Class.forName("oracle.jdbc.driver.OracleDriver");
-            Connection con=DriverManager.getConnection(
-                    "jdbc:oracle:thin:@orca.csc.ncsu.edu:1521:orcl01","rdange","200259721");
-            Statement stmt=con.createStatement();
+            Statement stmt=conn.createStatement();
             ResultSet rs=stmt.executeQuery("select * from EMPLOYEES");
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            while(rs.next())  {
-                for(int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-                    Object object = rs.getObject(columnIndex);
-                    System.out.printf("%s, ", object == null ? "NULL" : object.toString());
-                }
-                System.out.printf("%n");
-            }
-            con.commit();
-            con.close();
+            System.out.println("Completed Query Execution");
         } catch(Exception e) {
             ((PrintStream) null).println(e);
         }
