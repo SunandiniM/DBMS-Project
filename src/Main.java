@@ -9,7 +9,7 @@ public class Main {
             AdminLandingPage adminLandingPageObj = new AdminLandingPage();
             adminLandingPageObj.AskAdmin();
         }else if (role == "customer") {
-            
+
         }
     }
 }
