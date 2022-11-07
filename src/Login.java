@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Login {
     // return the role in string
-    public String AskLogin(Scanner in, DBConnection dbConn) {
+    public String AskLogin(Scanner in) {
         System.out.println("Enter your username:");
         String username = in.nextLine();
         System.out.println("Enter your password:");
