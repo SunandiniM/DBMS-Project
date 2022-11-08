@@ -13,51 +13,57 @@ public class Manager {
     }
 
     public void LandingPageMenu() {
-        Scanner in = new Scanner(System.in);
+        while (true) {
+            Scanner in = new Scanner(System.in);
 
-        System.out.println("Press 1 to Setup Store");
-        System.out.println("Press 2 to Add New Employee");
-        System.out.println("Press 3 to log out");
+            System.out.println("Press 1 to Setup Store");
+            System.out.println("Press 2 to Add New Employee");
+            System.out.println("Press 3 to log out");
 
-        int option = in.nextInt();
-        switch (option) {
-            case 1:
-                SetupStore();
-                LandingPageMenu();
-            case 2:
-                AddEmployees();
-                LandingPageMenu();
-            case 3:
-                return;
-            default:
-                LandingPageMenu();
+            int option = in.nextInt();
+            switch (option) {
+                case 1:
+                    SetupStore();
+                    break;
+                case 2:
+                    AddEmployees();
+                    break;
+                case 3:
+                    return;
+                default:
+                    break;
+            }
         }
+
     }
 
     public void SetupStore() {
-        System.out.println("Press 1 to add employees");
-        System.out.println("Press 2 to setup operational hours");
-        System.out.println("Press 3 to setup service prices");
-        System.out.println("Press 4 to go back");
+        while (true) {
+            System.out.println("Press 1 to add employees");
+            System.out.println("Press 2 to setup operational hours");
+            System.out.println("Press 3 to setup service prices");
+            System.out.println("Press 4 to go back");
 
-        Scanner in = new Scanner(System.in);
-        int option = in.nextInt();
+            Scanner in = new Scanner(System.in);
+            int option = in.nextInt();
 
-        switch (option) {
-            case 1:
-                AddEmployees();
-                break;
-            case 2:
-                SetupOperationalHours();
-                break;
-            case 3:
-                SetupRepairServicePrices();
-                break;
-            case 4:
-                return;
-            default:
-                SetupStore();
+            switch (option) {
+                case 1:
+                    AddEmployees();
+                    break;
+                case 2:
+                    SetupOperationalHours();
+                    break;
+                case 3:
+                    SetupRepairServicePrices();
+                    break;
+                case 4:
+                    return;
+                default:
+                    break;
+            }
         }
+
     }
 
     public void AddEmployees() {
