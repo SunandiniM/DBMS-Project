@@ -9,8 +9,9 @@ public class Login {
         String username = in.nextLine();
         System.out.println("Enter your password:");
         String password = in.nextLine();
+        in = new Scanner(System.in);
         System.out.println("Enter your service center id:");
-        String centerId = in.nextLine();
+        int centerId = in.nextInt();
         if (username.equals("admin") && password.equals("admin")) {
             loginContext.role = "ADMIN";
             return loginContext;
@@ -21,16 +22,16 @@ public class Login {
             Statement stmt = dbConn.conn.createStatement();
             String sql1 = "SELECT * FROM CUSTOMER WHERE CID=" + username + " AND SCID=" + centerId + " AND LNAME='" + password + "'";
             ResultSet rs1 = stmt.executeQuery(sql1);
-            if (rs1.isBeforeFirst()) {
-                loginContext.SCID = centerId;
+            if (rs1 != null && rs1.isBeforeFirst()) {
+                loginContext.SCID = String.valueOf(centerId);
                 loginContext.ID = username;
                 loginContext.role = "CUSTOMER";
             } else {
                 String sql2 = "SELECT * FROM EMPLOYEES WHERE EMPID=" + username + " AND SCID=" + centerId + " AND LNAME='" + password + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
 
-                if (rs2.isBeforeFirst()) {
-                    loginContext.SCID = centerId;
+                if (rs2 != null && rs2.isBeforeFirst()) {
+                    loginContext.SCID = String.valueOf(centerId);
                     loginContext.ID = username;
                     while (rs2.next()) {
                         loginContext.role = rs2.getString("EROLE");
