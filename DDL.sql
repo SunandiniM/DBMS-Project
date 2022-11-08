@@ -22,7 +22,9 @@ create table SERVICE_CENTER(
     SCID number(9) primary key,   
     ADDRESS varchar(100),   
     PHONENO number(10),  
-    OPEN_SATURDAY number(1)  
+    OPEN_SATURDAY number(1),
+    MIN_WAGE number(5),
+    MAX_WAGE number(5)
 );
 
 create table EMPLOYEES(   
