@@ -78,7 +78,8 @@ create table OWNS(
 
 create table SERVICE( 
     SID number(9) primary key, 
-    SNAME varchar(40) 
+    SNAME varchar(40),
+    TYPE varchar(40)
 );
 
 create table REPAIR_SERVICE( 
