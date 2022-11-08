@@ -19,14 +19,14 @@ public class Login {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql1 = "SELECT * FROM CUSTOMER WHERE CID=" + username + " AND SCID=" + centerId + " AND LNAME=" + password;
+            String sql1 = "SELECT * FROM CUSTOMER WHERE CID=" + username + " AND SCID=" + centerId + " AND LNAME='" + password + "'";
             ResultSet rs1 = stmt.executeQuery(sql1);
             if (rs1.isBeforeFirst()) {
                 loginContext.SCID = centerId;
                 loginContext.ID = username;
                 loginContext.role = "CUSTOMER";
             } else {
-                String sql2 = "SELECT * FROM EMPLOYEES WHERE EMPID=" + username + " AND SCID=" + centerId + " AND LNAME=" + password;
+                String sql2 = "SELECT * FROM EMPLOYEES WHERE EMPID=" + username + " AND SCID=" + centerId + " AND LNAME='" + password + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
 
                 if (rs2.isBeforeFirst()) {
