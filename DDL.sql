@@ -166,51 +166,51 @@ create table SWAP_REQUEST (
     FOREIGN KEY(EMPID, SCID) REFERENCES EMPLOYEES ON DELETE CASCADE
 );
 
-CREATE TRIGGER addingHourlyEmployee  
-AFTER UPDATE ON HOURLY_EMPLOYEE_SCHEDULE 
-FOR EACH ROW  
-DECLARE  
-    DAY_SELECTED integer(1);  
-    CHECK_SATURDAY integer(1); 
-BEGIN  
-    SELECT HE.DAY, SC.OPEN_SATURDAY INTO DAY_SELECTED, CHECK_SATURDAY 
-    FROM HOURLY_EMPLOYEE_SCHEDULE HE 
-    INNER JOIN SERVICE_CENTER SC 
-    ON SC.SCID = HE.SCID; 
-    IF CHECK_SATURDAY <> 1 AND DAY_SELECTED = 6 THEN  
-        RAISE_APPLICATION_ERROR (-20000, 'Not open on saturday!');  
-    END IF;  
-END; 
+-- CREATE TRIGGER addingHourlyEmployee  
+-- AFTER UPDATE ON HOURLY_EMPLOYEE_SCHEDULE 
+-- FOR EACH ROW  
+-- DECLARE  
+--     DAY_SELECTED integer(1);  
+--     CHECK_SATURDAY integer(1); 
+-- BEGIN  
+--     SELECT HE.DAY, SC.OPEN_SATURDAY INTO DAY_SELECTED, CHECK_SATURDAY 
+--     FROM HOURLY_EMPLOYEE_SCHEDULE HE 
+--     INNER JOIN SERVICE_CENTER SC 
+--     ON SC.SCID = HE.SCID; 
+--     IF CHECK_SATURDAY <> 1 AND DAY_SELECTED = 6 THEN  
+--         RAISE_APPLICATION_ERROR (-20000, 'Not open on saturday!');  
+--     END IF;  
+-- END; 
  
-/
+-- /
 
-CREATE TRIGGER addingOnSat  
-AFTER UPDATE ON HOURLY_EMPLOYEE_SCHEDULE  
-FOR EACH ROW  
-DECLARE  
-    EMPLOYEE_ROLE varchar(12);  
-BEGIN  
-    SELECT E.EROLE INTO EMPLOYEE_ROLE  
-    FROM HOURLY_EMPLOYEE_SCHEDULE HE, EMPLOYEES E  
-    WHERE HE.EMPID = E.EMPID;  
-    IF EMPLOYEE_ROLE <> 'MECHANIC' THEN  
-        RAISE_APPLICATION_ERROR (-20000, 'Not a mechanic!');  
-    END IF;  
-END; 
+-- CREATE TRIGGER addingOnSat  
+-- AFTER UPDATE ON HOURLY_EMPLOYEE_SCHEDULE  
+-- FOR EACH ROW  
+-- DECLARE  
+--     EMPLOYEE_ROLE varchar(12);  
+-- BEGIN  
+--     SELECT E.EROLE INTO EMPLOYEE_ROLE  
+--     FROM HOURLY_EMPLOYEE_SCHEDULE HE, EMPLOYEES E  
+--     WHERE HE.EMPID = E.EMPID;  
+--     IF EMPLOYEE_ROLE <> 'MECHANIC' THEN  
+--         RAISE_APPLICATION_ERROR (-20000, 'Not a mechanic!');  
+--     END IF;  
+-- END; 
  
-/
+-- /
 
-CREATE TRIGGER changeProfileStatus  
-AFTER UPDATE ON OWNS  
-FOR EACH ROW  
-BEGIN  
-    UPDATE CUSTOMER C  
-    SET C.PROFILE_STATUS = 0  
-    WHERE C.CID NOT IN ( SELECT O.CID   
-                    FROM OWNS O);  
-END; 
+-- CREATE TRIGGER changeProfileStatus  
+-- AFTER UPDATE ON OWNS  
+-- FOR EACH ROW  
+-- BEGIN  
+--     UPDATE CUSTOMER C  
+--     SET C.PROFILE_STATUS = 0  
+--     WHERE C.CID NOT IN ( SELECT O.CID   
+--                     FROM OWNS O);  
+-- END; 
  
-/
+-- /
 
 
 create or replace trigger avoidIncorrrectRepairCategory
@@ -220,5 +220,19 @@ begin
     if :new.CATEGORY not in ('Engine Services', 'Exhaust Services', 'Electrical Services', 'Transmission Services', 'Tire Services', 'Heating and A/C Services') then
         raise_application_error(-20000, 'Category should be one of Engine Services, Exhaust Services, Electrical Services, Transmission Services, Tire Services, Heating and A/C Services');
     end if;
-end demo_hide_foo_trg;
+end avoidIncorrrectRepairCategory;
+/
+
+
+create or replace trigger avoidNonHourlyEmployees
+before insert or update on HOURLY_EMPLOYEE_SCHEDULE
+for each row
+declare
+    emp_role EMPLOYEES.EROLE%TYPE;
+begin
+    SELECT EROLE INTO emp_role FROM EMPLOYEES WHERE EMPID=:new.EMPID and SCID=:new.SCID;
+    if (:new.EROLE != 'MECHANIC') then
+        raise_application_error(-20000, 'Only Mechanics can be added into HOURLY_EMPLOYEE_SCHEDULE table');
+    end if;
+end avoidNonHourlyEmployees;
 /
