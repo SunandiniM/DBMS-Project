@@ -11,53 +11,53 @@ VALUES(30002, '4500 Preslyn Dr Suite 103, Raleigh, NC 27616', 8576890280, 1);
 INSERT INTO SERVICE_CENTER 
 VALUES(30003, '9515 Chapel Hill Rd, Morrisville, NC 27560', 7798182200, 0);
 
-INSERT INTO EMPLOYEES(SCID, EMPID, ENAME, ADDRESS, EMAIL, PHONENO, EROLE, USERNAME) 
-VALUES(30001, 123456789, 'John Doe', '1378 University Woods, Raleigh, NC 27612', 'jdoe@gmail.com', 8636368778, 'MANAGER', 'JohnDoe');
+INSERT INTO EMPLOYEES(SCID, EMPID, FNAME, LNAME, ADDRESS, EMAIL, PHONENO, EROLE, USERNAME) 
+VALUES(30001, 123456789, 'John', 'Doe', '1378 University Woods, Raleigh, NC 27612', 'jdoe@gmail.com', 8636368778, 'MANAGER', 'JohnDoe');
 
 INSERT INTO EMPLOYEES 
-VALUES(30002, 987654321, 'Rachel Brooks', '2201 Gorman Parkwood, Raleigh, NC 27618', 'rbrooks@ymail.com', 8972468552, 'MANAGER', 'RachelBrooks');
+VALUES(30002, 987654321, 'Rachel', 'Brooks', '2201 Gorman Parkwood, Raleigh, NC 27618', 'rbrooks@ymail.com', 8972468552, 'MANAGER', 'RachelBrooks');
 
 INSERT INTO EMPLOYEES 
-VALUES(30003, 987612345, 'Caleb Smith', '1538 Red Bud Lane, Morrisville, NC 27560', 'csmith@yahoo.com', 8547963210, 'MANAGER', 'CalebSmith');
+VALUES(30003, 987612345, 'Caleb', 'Smith', '1538 Red Bud Lane, Morrisville, NC 27560', 'csmith@yahoo.com', 8547963210, 'MANAGER', 'CalebSmith');
 
 INSERT INTO EMPLOYEES 
-VALUES(30001, 132457689, 'James Williams', '1400 Gorman St, Raleigh, NC 27606-2972', 'jwilliams@gmail.com', 4576312882, 'MECHANIC', 'JamesWilliams');
+VALUES(30001, 132457689, 'James', 'Williams', '1400 Gorman St, Raleigh, NC 27606-2972', 'jwilliams@gmail.com', 4576312882, 'MECHANIC', 'JamesWilliams');
 
 INSERT INTO EMPLOYEES 
-VALUES(30001, 314275869, 'David Johnson', '686 Stratford Court, Raleigh, NC 27606', 'djohnson@ymail.com', 9892321100, 'MECHANIC', 'DavidJohnson');
+VALUES(30001, 314275869, 'David', 'Johnson', '686 Stratford Court, Raleigh, NC 27606', 'djohnson@ymail.com', 9892321100, 'MECHANIC', 'DavidJohnson');
 
 INSERT INTO EMPLOYEES 
-VALUES(30001, 241368579, 'Maria Garcia', '1521 Graduate Lane, Raleigh, NC 27606', 'mgarcia@yahoo.com', 4573459090, 'MECHANIC', 'MariaGarcia');
+VALUES(30001, 241368579, 'Maria', 'Garcia', '1521 Graduate Lane, Raleigh, NC 27606', 'mgarcia@yahoo.com', 4573459090, 'MECHANIC', 'MariaGarcia');
 
 INSERT INTO EMPLOYEES 
-VALUES(30002, 123789456, 'Robert Martinez', '1232 Tartan Circle, Raleigh, NC 27607', 'rmartinez@ymail.com', 7652304282, 'MECHANIC', 'RobertMartinez');
+VALUES(30002, 123789456, 'Robert', 'Martinez', '1232 Tartan Circle, Raleigh, NC 27607', 'rmartinez@ymail.com', 7652304282, 'MECHANIC', 'RobertMartinez');
 
 INSERT INTO EMPLOYEES 
-VALUES(30002, 789123456, 'Charles Rodriguez', '218 Patton Lane, Raleigh, NC 27603', 'crodriguez@yahoo.com', 9092234281, 'MECHANIC', 'CharlesRodriguez');
+VALUES(30002, 789123456, 'Charles', 'Rodriguez', '218 Patton Lane, Raleigh, NC 27603', 'crodriguez@yahoo.com', 9092234281, 'MECHANIC', 'CharlesRodriguez');
 
 INSERT INTO EMPLOYEES 
-VALUES(30002, 125689347, 'Jose Hernandez', '4747 Dola Mine Road, Raleigh, NC 27609', 'jhernandez@gmail.com', 7653241714, 'MECHANIC', 'JoseHernandez');
+VALUES(30002, 125689347, 'Jose', 'Hernandez', '4747 Dola Mine Road, Raleigh, NC 27609', 'jhernandez@gmail.com', 7653241714, 'MECHANIC', 'JoseHernandez');
 
 INSERT INTO EMPLOYEES 
-VALUES(30002, 423186759, 'Ellie Clark', '3125 Avent Ferry Road, Raleigh, NC 27605', 'eclark@gmail.com', 9892180921, 'MECHANIC', 'EllieClark');
+VALUES(30002, 423186759, 'Ellie', 'Clark', '3125 Avent Ferry Road, Raleigh, NC 27605', 'eclark@gmail.com', 9892180921, 'MECHANIC', 'EllieClark');
 
 INSERT INTO EMPLOYEES 
-VALUES(30003, 347812569, 'Charlie Brown', '1 Rockford Mountain Lane, Morrisville, NC 27560', 'cbrown@ymail.com', 9091237568, 'MECHANIC', 'CharlieBrown');
+VALUES(30003, 347812569, 'Charlie', 'Brown', '1 Rockford Mountain Lane, Morrisville, NC 27560', 'cbrown@ymail.com', 9091237568, 'MECHANIC', 'CharlieBrown');
 
 INSERT INTO EMPLOYEES 
-VALUES(30003, 123456780, 'Jeff Gibson', '900 Development Drive, Morrisville, NC 27560', 'jgibson@yahoo.com', 3390108899, 'MECHANIC', 'JeffGibson');
+VALUES(30003, 123456780, 'Jeff', 'Gibson', '900 Development Drive, Morrisville, NC 27560', 'jgibson@yahoo.com', 3390108899, 'MECHANIC', 'JeffGibson');
 
 INSERT INTO EMPLOYEES 
-VALUES(30003, 123456708, 'Isabelle Wilder', '6601 Koppers Road, Morrisville, NC 27560', 'iwilder@gmail.com', 3394561231, 'MECHANIC', 'IsabelleWilder');
+VALUES(30003, 123456708, 'Isabelle', 'Wilder', '6601 Koppers Road, Morrisville, NC 27560', 'iwilder@gmail.com', 3394561231, 'MECHANIC', 'IsabelleWilder');
 
 INSERT INTO EMPLOYEES 
-VALUES(30003, 123456078, 'Peter Titus', '2860 Slater Road, Morrisville, NC 27560', 'ptitus@ymail.com', 3396723418, 'MECHANIC', 'PeterTitus');
+VALUES(30003, 123456078, 'Peter', 'Titus', '2860 Slater Road, Morrisville, NC 27560', 'ptitus@ymail.com', 3396723418, 'MECHANIC', 'PeterTitus');
 
 INSERT INTO EMPLOYEES 
-VALUES(30003, 123450678, 'Mark Mendez', '140 Southport Drive, Morrisville, NC 27560', 'mmendez@yahoo.com', 3395792080, 'MECHANIC', 'MarkMendez');
+VALUES(30003, 123450678, 'Mark', 'Mendez', '140 Southport Drive, Morrisville, NC 27560', 'mmendez@yahoo.com', 3395792080, 'MECHANIC', 'MarkMendez');
 
 INSERT INTO EMPLOYEES 
-VALUES(30003, 123405678, 'Lisa Alberti', '100 Valley Glen Drive, Morrisville, NC 27560', 'lalberti@yahoo.com', 3391126787, 'MECHANIC', 'LisaAlberti');
+VALUES(30003, 123405678, 'Lisa', 'Alberti', '100 Valley Glen Drive, Morrisville, NC 27560', 'lalberti@yahoo.com', 3391126787, 'MECHANIC', 'LisaAlberti');
 
 INSERT INTO WORKSIN(SCID, EMPID, PAY) 
 VALUES(30001, 123456789, 44);

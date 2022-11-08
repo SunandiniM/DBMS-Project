@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Login {
@@ -12,25 +9,56 @@ public class Login {
         String username = in.nextLine();
         System.out.println("Enter your password:");
         String password = in.nextLine();
+        System.out.println("Enter your service center id:");
+        String centerId = in.nextLine();
         if (username.equals("admin") && password.equals("admin")) {
             loginContext.role = "ADMIN";
             return loginContext;
         }
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql1 = "SELECT * FROM CUSTOMER WHERE CID=" + username + " AND SCID=" + centerId + " AND LNAME=" + password;
+            ResultSet rs1 = stmt.executeQuery(sql1);
+            if (rs1.isBeforeFirst()) {
+                loginContext.SCID = centerId;
+                loginContext.ID = username;
+                loginContext.role = "CUSTOMER";
+            } else {
+                String sql2 = "SELECT * FROM EMPLOYEES WHERE EMPID=" + username + " AND SCID=" + centerId + " AND LNAME=" + password;
+                ResultSet rs2 = stmt.executeQuery(sql2);
 
-        ResultSet rs;
-        String role = "";
+                if (rs2.isBeforeFirst()) {
+                    loginContext.SCID = centerId;
+                    loginContext.ID = username;
+                    while (rs2.next()) {
+                        loginContext.role = rs2.getString("EROLE");
+                    }
+                } else {
+                    System.out.println("Failed to Login. Please enter valid details.");
+                    dbConn.conn.commit();
+                    dbConn.closeConnection();
+                    return null;
+                }
+            }
+            dbConn.conn.commit();
+            dbConn.closeConnection();
+            System.out.println("Successfully logged in");
+            dbConn.conn.commit();
+            dbConn.closeConnection();
+        } catch (Exception e) {
+            System.out.println("Failed to login");
+        }
 
 
-        loginContext.SCID = "1001";
-        loginContext.ID = "2001";
-        loginContext.role = "MECHANIC";
+//        loginContext.SCID = "1001";
+//        loginContext.ID = "2001";
+//        loginContext.role = "MECHANIC";
         // check from JDBC if the user exists and return the role
         // based on the role create the landing page
         return loginContext;
     }
-
-
-
 
     public void AskLogout() {
         System.out.println("Do you want to logout?");

@@ -13,24 +13,23 @@ public class Main {
             in = new Scanner(System.in);
             Login loginObj = new Login();
             LoginContext loginContext = loginObj.AskLogin(in);
-            // based on role give the landing pages
+            if (loginContext != null) {
+                if (loginContext.role == "ADMIN") {
+                    AdminLandingPage adminLandingPageObj = new AdminLandingPage();
+                    adminLandingPageObj.AskAdmin();
+                } else if (loginContext.role == "CUSTOMER") {
 
-            if (loginContext.role == "ADMIN") {
-                AdminLandingPage adminLandingPageObj = new AdminLandingPage();
-                adminLandingPageObj.AskAdmin();
-            } else if (loginContext.role == "CUSTOMER") {
-
-            } else if (loginContext.role == "RECEPTIONIST") {
-                Receptionist receptionist = new Receptionist();
-                receptionist.LandingPageMenu();
-            } else if (loginContext.role == "MANAGER") {
-                Manager manager = new Manager();
-                manager.LandingPageMenu();
-            } else if (loginContext.role == "MECHANIC") {
-                Mechanic mechanic = new Mechanic();
-                mechanic.LandingPageMenu(loginContext);
+                } else if (loginContext.role == "RECEPTIONIST") {
+                    Receptionist receptionist = new Receptionist();
+                    receptionist.LandingPageMenu();
+                } else if (loginContext.role == "MANAGER") {
+                    Manager manager = new Manager();
+                    manager.LandingPageMenu();
+                } else if (loginContext.role == "MECHANIC") {
+                    Mechanic mechanic = new Mechanic();
+                    mechanic.LandingPageMenu(loginContext);
+                }
             }
-
             System.out.println("Press 1 to Log In");
             System.out.println("Press 2 to Exit");
 //            in = new Scanner(System.in);

@@ -28,7 +28,8 @@ create table SERVICE_CENTER(
 create table EMPLOYEES(   
     SCID number(9),   
     EMPID number(9),   
-    ENAME varchar(20),   
+    FNAME varchar(20),   
+    LNAME varchar(20),   
     ADDRESS varchar(100),   
     EMAIL varchar(30),   
     PHONENO number(10),   
