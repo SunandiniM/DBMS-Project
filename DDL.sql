@@ -231,7 +231,7 @@ declare
     emp_role EMPLOYEES.EROLE%TYPE;
 begin
     SELECT EROLE INTO emp_role FROM EMPLOYEES WHERE EMPID=:new.EMPID and SCID=:new.SCID;
-    if (:new.EROLE != 'MECHANIC') then
+    if (emp_role != 'MECHANIC') then
         raise_application_error(-20000, 'Only Mechanics can be added into HOURLY_EMPLOYEE_SCHEDULE table');
     end if;
 end avoidNonHourlyEmployees;
