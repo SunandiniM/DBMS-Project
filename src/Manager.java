@@ -1,5 +1,3 @@
-import sun.rmi.runtime.Log;
-
 import java.sql.Statement;
 import java.util.Scanner;
 
