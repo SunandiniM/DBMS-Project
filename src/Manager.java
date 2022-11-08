@@ -1,3 +1,4 @@
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Manager {
@@ -120,23 +121,49 @@ public class Manager {
 
     }
 
-    public void AskManager() {
+    public boolean AskManager(int storeId, DBConnection dbConn) {
         Scanner in = new Scanner(System.in);
+        System.out.println("Enter Manager's id");
+        int empID = in.nextInt();
+        in = new Scanner(System.in);
         System.out.println("Enter Manager's First Name");
         String fname = in.nextLine();
+        in = new Scanner(System.in);
         System.out.println("Enter Manager's Last name");
         String lname = in.nextLine();
-        System.out.println("Enter the username");
-        String username = in.nextLine();
-        System.out.println("Enter Password");
-        String password = in.nextLine();
-        System.out.println("Enter Salary");
-        double salary = in.nextDouble();
-        System.out.println("Enter the employee id");
-        String empID = in.nextLine();
-
-        // Call the JDBC function to add the manager
-
-        // return empid of the manager?
+        in = new Scanner(System.in);
+        System.out.println("Enter Manager's Address");
+        String address = in.nextLine();
+        in = new Scanner(System.in);
+        System.out.println("Enter Manager's Email");
+        String email = in.nextLine();
+        in = new Scanner(System.in);
+        System.out.println("Enter Manager's Phone Number");
+        int phoneNum = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter Manager's Salary");
+        int salary = in.nextInt();
+        boolean returnFlag = true;
+        try {
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "INSERT INTO EMPLOYEES VALUES ('" + storeId + "', '" + empID + "', '" + fname + "', '" + lname + "', '" +
+                    address + "', '" + email + "', '" + phoneNum + "', '" + "MANAGER" + "', '" + fname + lname + "')";
+            stmt.executeUpdate(sql);
+            try {
+                sql = "INSERT INTO WORKSIN VALUES ('" + storeId + "', '" + empID + "', '" + salary + "')";
+                stmt.executeUpdate(sql);
+                System.out.println("Successfully added store manager");
+            } catch (Exception e) {
+                System.out.println("Failed to Create store manager");
+                System.out.println(e);
+                returnFlag = false;
+            }
+            dbConn.closeConnection();
+        } catch(Exception e) {
+            System.out.println("Failed to create manager");
+            System.out.println(e);
+            returnFlag = false;
+        }
+        return returnFlag;
     }
 }
