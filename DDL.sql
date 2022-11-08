@@ -224,6 +224,31 @@ end avoidIncorrrectRepairCategory;
 /
 
 
+create or replace trigger maintenanceHierarchy
+before insert or update on MAINTAINANCE_SERVICE
+for each row
+declare
+    pragma autonomous_transaction;
+    b_count number;
+    c_count number;
+begin
+    if :new.SCHEDULE_ID = 113 THEN
+        select count(*) into b_count from MAINTAINANCE_SERVICE where SCHEDULE_ID=114 and SERVICE_ID=:new.SERVICE_ID;
+        select count(*) into c_count from MAINTAINANCE_SERVICE where SCHEDULE_ID=115 and SERVICE_ID=:new.SERVICE_ID;
+        if b_count <= 0 or c_count <= 0 THEN
+            raise_application_error(-20000, 'Service should be present in both Schedule B and Schedule C');
+        end if;
+    end if;
+    if :new.SCHEDULE_ID = 114 THEN
+        select count(*) into c_count from MAINTAINANCE_SERVICE where SCHEDULE_ID=115 and SERVICE_ID=:new.SERVICE_ID;
+        if c_count <= 0 THEN
+            raise_application_error(-20000, 'Service should be present in Schedule C');
+        end if;
+    end if;
+end maintenanceHierarchy;
+/
+
+
 create or replace trigger avoidNonHourlyEmployees
 before insert or update on HOURLY_EMPLOYEE_SCHEDULE
 for each row
