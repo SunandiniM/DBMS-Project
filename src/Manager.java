@@ -69,6 +69,7 @@ public class Manager {
         int compensation = in.nextInt();
 
         // JDBC CALL to save
+
     }
 
     public void SetupServicePrices() {

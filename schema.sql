@@ -31,7 +31,8 @@ create table EMPLOYEES(
     ADDRESS varchar(40),  
     EMAIL varchar(30),  
     PHONENO number(10),  
-    EROLE varchar(12),  
+    EROLE varchar(12),
+    USERNAME varchar(20),
     PRIMARY KEY(EMPID, SCID),  
     FOREIGN KEY(SCID) REFERENCES SERVICE_CENTER ON DELETE CASCADE  
 );
@@ -49,7 +50,8 @@ create table CUSTOMER(
     SCID number(9), 
     CID number(9), 
     FNAME varchar(20), 
-    LNAME varchar(20), 
+    LNAME varchar(20),
+    USERNAME varchar(20),
     ACC_STATUS number(1), /* 0 means no outstanding balance */ 
     PROFILE_STATUS number(1), /* 1 means active so car exists */ 
     PRIMARY KEY(SCID, CID), 
@@ -136,8 +138,36 @@ create table HOURLY_EMPLOYEE_SCHEDULE(
     FOREIGN KEY(ORDER_ID) REFERENCES INVOICE ON DELETE CASCADE
 );
 
+create table TIMEOFF_REQUEST (
+    SCID number(9),
+    EMPID number(9),
+    DAY number(4);
+    WEEK number(4),
+    START_SLOT number(4),
+    END_SLOT number(4)
+    STATUS number(1),
+
+    PRIMARY KEY(SCID, EMPID),
+    FOREIGN KEY(EMPID, SCID) REFERENCES EMPLOYEES ON DELETE CASCADE
+);
+
+create table SWAP_REQUEST (
+    REQUEST_ID number(10) auto increment,
+    SCID number(9),
+    EMPID number(9),
+    REQUESTED_EMP_ID number(9),
+    DAY number(4);
+    WEEK number(4),
+    START_SLOT number(4),
+    END_SLOT number(4)
+    STATUS number(1),
+
+    PRIMARY KEY(SCID, EMPID),
+    FOREIGN KEY(EMPID, SCID) REFERENCES EMPLOYEES ON DELETE CASCADE
+);
+
 CREATE TRIGGER addingHourlyEmployee 
-AFTER UPDATE ON HOURLY_EMPLOYEE 
+AFTER UPDATE ON HOURLY_EMPLOYEE
 FOR EACH ROW 
 DECLARE 
     EMPLOYEE_ROLE varchar(12); 

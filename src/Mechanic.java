@@ -1,7 +1,9 @@
+import java.sql.Statement;
 import java.util.Scanner;
+import java.sql.*;
 
 public class Mechanic {
-    public void LandingPageMenu() {
+    public void LandingPageMenu(LoginContext loginContext) {
         System.out.println("Enter 1 to View Schedule");
         System.out.println("Enter 2 to Request Time Off");
         System.out.println("Enter 3 to Request Swap");
@@ -13,23 +15,44 @@ public class Mechanic {
 
         switch (option) {
             case 1:
-                ViewSchedule();
-                LandingPageMenu();
+                ViewSchedule(loginContext);
+                LandingPageMenu(loginContext);
             case 2:
-                RequestTimeOff();
-                LandingPageMenu();
+                RequestTimeOff(loginContext);
+                LandingPageMenu(loginContext);
             case 3:
+                RequestSwap(loginContext);
+                LandingPageMenu(loginContext);
             case 4:
+                AcceptRejectSwapRequests(loginContext);
+                LandingPageMenu(loginContext);
             case 5:
             default:
         }
     }
 
-    public void ViewSchedule() {
-        // list of the time slots busy of the mechnaic
+    public void ViewSchedule(LoginContext loginContext) {
+        // list of the time slots busy of the mechnanic
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            Connection conn = dbConn.createConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM HOURLY_EMPLOYEES_SCHEDULE WHERE SCID = ? AND EMPID = ?");
+            stmt.setString(1, loginContext.SCID);
+            stmt.setString(2, loginContext.ID);
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()) {
+                // print the order_id, week, starting slot, ending slot
+            }
+
+
+        } catch(Exception e) {
+            System.out.println("Failed to print the schedule of the mechanic");
+
+        }
     }
 
-    public void RequestTimeOff() {
+    public void RequestTimeOff(LoginContext loginContext) {
         Scanner in = new Scanner(System.in);
 
         System.out.println("Enter the week you want a time off");
@@ -52,12 +75,34 @@ public class Mechanic {
         int option = in.nextInt();
         if (option == 1) {
             // JDBC Call
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                Connection conn = dbConn.createConnection();
+                PreparedStatement stmt = conn.prepareStatement("INSERT INTO REQUEST_TIMEOFF VALUES(?, ?, ?, ?, ?, ?, ?)");
+                stmt.setString(1, loginContext.SCID);
+                stmt.setString(2, loginContext.ID);
+                stmt.setString(3, day + "");
+                stmt.setString(4, week + "");
+                stmt.setString(5, startSlot + "");
+                stmt.setString(6, endSlot + "");
+                stmt.setString(7, 0 + "");
+
+                System.out.println(stmt.toString());
+                stmt.executeQuery();
+
+                if(stmt.executeUpdate() == 0)
+                    System.out.println("Request for timeoff failed to submit");
+                else
+                    System.out.println("Request for timeoff successfully submitted");
+            } catch(Exception e) {
+                System.out.println("Met with this exception while committing to the database " + e);
+            }
         }else{
             return;
         }
     }
 
-    public void RequestSwap() {
+    public void RequestSwap(LoginContext loginContext) {
         Scanner in = new Scanner(System.in);
 
         System.out.println("Enter the week you want a swap");
@@ -87,12 +132,35 @@ public class Mechanic {
         int option = in.nextInt();
         if (option == 1) {
             // JDBC Call
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                Connection conn = dbConn.createConnection();
+                PreparedStatement stmt = conn.prepareStatement("INSERT INTO SWAP_REQUEST VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+                stmt.setString(1, loginContext.SCID);
+                stmt.setString(2, loginContext.ID);
+                stmt.setString(3, empID);
+                stmt.setString(4, day + "");
+                stmt.setString(5, week + "");
+                stmt.setString(6, startSlot + "");
+                stmt.setString(7, endSlot + "");
+                stmt.setString(8, 0+ "");
+
+                System.out.println(stmt.toString());
+                stmt.executeQuery();
+
+                if(stmt.executeUpdate() == 0)
+                    System.out.println("Request for swap request failed to submit");
+                else
+                    System.out.println("Request for swap request successfully submitted");
+            } catch(Exception e) {
+                System.out.println("Met with this exception while committing to the database " + e);
+            }
         }else{
             return;
         }
     }
 
-    public void AcceptRejectSwapRequests() {
+    public void AcceptRejectSwapRequests(LoginContext loginContext) {
 
         // Display the swap requests first
 
@@ -102,13 +170,13 @@ public class Mechanic {
         Scanner in = new Scanner(System.in);
         int option = in.nextInt();
         if (option == 1) {
-
+            ManageSwapRequests(loginContext);
         }else{
             return;
         }
     }
 
-    public void ManageSwapRequests() {
+    public void ManageSwapRequests(LoginContext loginContext) {
         System.out.println("Enter the request ID of the swap request");
         Scanner in = new Scanner(System.in);
         String requestID = in.nextLine();
@@ -117,8 +185,38 @@ public class Mechanic {
         int option = in.nextInt();
         if (option == 1) {
             // JDBC call to accept the request
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                Connection conn = dbConn.createConnection();
+                PreparedStatement stmt = conn.prepareStatement("UPDATE SWAP_REQUEST SET STATUS=1 WHERE REQUEST_ID=?");
+                stmt.setString(1, requestID);
+                System.out.println(stmt.toString());
+                stmt.executeQuery();
+
+                if(stmt.executeUpdate() == 0)
+                    System.out.println("Request to approve swap request failed to submit");
+                else
+                    System.out.println("Request to approve swap request successfully submitted");
+            } catch(Exception e) {
+                System.out.println("Met with this exception while committing to the database " + e);
+            }
         } else if (option == 2) {
             // JDBC call to reject the request
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                Connection conn = dbConn.createConnection();
+                PreparedStatement stmt = conn.prepareStatement("UPDATE SWAP_REQUEST SET STATUS = 0 WHERE REQUEST_ID=?");
+                stmt.setString(1, requestID);
+                System.out.println(stmt.toString());
+                stmt.executeQuery();
+
+                if(stmt.executeUpdate() == 0)
+                    System.out.println("Request to reject swap request failed to submit");
+                else
+                    System.out.println("Request to reject swap request successfully submitted");
+            } catch(Exception e) {
+                System.out.println("Met with this exception while committing to the database " + e);
+            }
         }else{
             return;
         }

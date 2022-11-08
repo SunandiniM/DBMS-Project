@@ -12,26 +12,28 @@ public class Main {
 
             in = new Scanner(System.in);
             Login loginObj = new Login();
-            String role = loginObj.AskLogin(in);
+            LoginContext loginContext = loginObj.AskLogin(in);
             // based on role give the landing pages
 
-            if (role == "admin") {
+            if (loginContext.role == "ADMIN") {
                 AdminLandingPage adminLandingPageObj = new AdminLandingPage();
                 adminLandingPageObj.AskAdmin();
-            } else if (role == "customer") {
+            } else if (loginContext.role == "CUSTOMER") {
 
-            } else if (role == "receptionist") {
+            } else if (loginContext.role == "RECEPTIONIST") {
                 Receptionist receptionist = new Receptionist();
                 receptionist.LandingPageMenu();
-            } else if (role == "manager") {
+            } else if (loginContext.role == "MANAGER") {
                 Manager manager = new Manager();
                 manager.LandingPageMenu();
-            } else if (role == "mechanic") {
-
+            } else if (loginContext.role == "MECHANIC") {
+                Mechanic mechanic = new Mechanic();
+                mechanic.LandingPageMenu(loginContext);
             }
+
             System.out.println("Press 1 to Log In");
             System.out.println("Press 2 to Exit");
-            in = new Scanner(System.in);
+//            in = new Scanner(System.in);
             option = in.nextInt();
         }
 
