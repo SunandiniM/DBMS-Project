@@ -18,7 +18,8 @@ public class AdminLandingPage {
                     sysObj.AskSystemSetup();
                     break;
                 case 2:
-                    // Add a new store
+                    StoreInfo storeObj = new StoreInfo();
+                    storeObj.AskStoreInfo();
                     break;
                 case 3:
                     Service serviceObj = new Service();
