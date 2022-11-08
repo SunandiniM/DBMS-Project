@@ -20,7 +20,7 @@ public class Main {
 
                 } else if (loginContext.role.equals("RECEPTIONIST")) {
                     Receptionist receptionist = new Receptionist();
-                    receptionist.LandingPageMenu();
+                    receptionist.LandingPageMenu(loginContext);
                 } else if (loginContext.role.equals("MANAGER")) {
                     Manager manager = new Manager();
                     manager.LandingPageMenu();
