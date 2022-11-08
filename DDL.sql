@@ -79,8 +79,7 @@ create table OWNS(
 
 create table SERVICE(  
     SID number(9) primary key,  
-    SNAME varchar(100), 
-    TYPE varchar(30) 
+    SNAME varchar(100)
 );
 
 create table REPAIR_SERVICE(  
@@ -91,10 +90,11 @@ create table REPAIR_SERVICE(
 );
 
 create table MAINTAINANCE_SERVICE(  
-    SID number(9),  
-    MSNAME varchar(100), 
-    PRIMARY KEY(SID, MSNAME),  
-    FOREIGN KEY(SID) REFERENCES SERVICE ON DELETE CASCADE  
+    SCHEDULE_ID number(9),  
+    SERVICE_ID number(9), 
+    PRIMARY KEY(SCHEDULE_ID, SERVICE_ID),  
+    FOREIGN KEY(SCHEDULE_ID) REFERENCES SERVICE(SID) ON DELETE CASCADE,
+    FOREIGN KEY(SERVICE_ID) REFERENCES SERVICE(SID) ON DELETE CASCADE  
 );
 
 create table OFFERS(  
@@ -212,3 +212,13 @@ END;
  
 /
 
+
+create or replace trigger avoidIncorrrectRepairCategory
+before insert or update on REPAIR_SERVICE
+for each row
+begin
+    if :new.CATEGORY not in ('Engine Services', 'Exhaust Services', 'Electrical Services', 'Transmission Services', 'Tire Services', 'Heating and A/C Services') then
+        raise_application_error(-20000, 'Category should be one of Engine Services, Exhaust Services, Electrical Services, Transmission Services, Tire Services, Heating and A/C Services');
+    end if;
+end demo_hide_foo_trg;
+/
