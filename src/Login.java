@@ -46,14 +46,8 @@ public class Login {
         } catch (Exception e) {
             System.out.println("Failed to login");
         }
-
-
-//        loginContext.SCID = "1001";
-//        loginContext.ID = "2001";
-//        loginContext.role = "MECHANIC";
         // check from JDBC if the user exists and return the role
         // based on the role create the landing page
-        System.out.println(loginContext);
         return loginContext;
     }
 

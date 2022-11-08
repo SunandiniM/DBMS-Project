@@ -14,18 +14,18 @@ public class Main {
             Login loginObj = new Login();
             LoginContext loginContext = loginObj.AskLogin(in);
             if (loginContext != null) {
-                if (loginContext.role == "ADMIN") {
+                if (loginContext.role.equals("ADMIN")) {
                     AdminLandingPage adminLandingPageObj = new AdminLandingPage();
                     adminLandingPageObj.AskAdmin();
-                } else if (loginContext.role == "CUSTOMER") {
+                } else if (loginContext.role.equals("CUSTOMER")) {
 
-                } else if (loginContext.role == "RECEPTIONIST") {
+                } else if (loginContext.role.equals("RECEPTIONIST")) {
                     Receptionist receptionist = new Receptionist();
                     receptionist.LandingPageMenu();
-                } else if (loginContext.role == "MANAGER") {
+                } else if (loginContext.role.equals("MANAGER")) {
                     Manager manager = new Manager();
                     manager.LandingPageMenu();
-                } else if (loginContext.role == "MECHANIC") {
+                } else if (loginContext.role.equals("MECHANIC")) {
                     Mechanic mechanic = new Mechanic();
                     mechanic.LandingPageMenu(loginContext);
                 }
