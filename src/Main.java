@@ -22,7 +22,7 @@ public class Main {
                     Receptionist receptionist = new Receptionist();
                     receptionist.LandingPageMenu(loginContext);
                 } else if (loginContext.role.equals("MANAGER")) {
-                    Manager manager = new Manager();
+                    Manager manager = new Manager(loginContext);
                     manager.LandingPageMenu();
                 } else if (loginContext.role.equals("MECHANIC")) {
                     Mechanic mechanic = new Mechanic();

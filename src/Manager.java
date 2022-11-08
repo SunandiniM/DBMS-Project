@@ -1,7 +1,18 @@
+import sun.rmi.runtime.Log;
+
 import java.sql.Statement;
 import java.util.Scanner;
 
 public class Manager {
+    LoginContext loginContext;
+
+    Manager() {
+        loginContext = null;
+    }
+
+    Manager(LoginContext lc) {
+        loginContext = lc;
+    }
 
     public void LandingPageMenu() {
         Scanner in = new Scanner(System.in);
@@ -19,7 +30,7 @@ public class Manager {
                 AddEmployees();
                 LandingPageMenu();
             case 3:
-                break;
+                return;
             default:
                 LandingPageMenu();
         }
@@ -53,24 +64,55 @@ public class Manager {
 
     public void AddEmployees() {
         Scanner in = new Scanner(System.in);
-        System.out.println("Enter Name");
-        String name = in.nextLine();
-        System.out.println("Enter address");
+        System.out.println("Enter Employee id");
+        long empID = Long.parseLong(in.nextLine());
+        in = new Scanner(System.in);
+        System.out.println("Enter Employee's First Name");
+        String fname = in.nextLine();
+        in = new Scanner(System.in);
+        System.out.println("Enter Employee's Last name");
+        String lname = in.nextLine();
+        in = new Scanner(System.in);
+        System.out.println("Enter Employee's Address");
         String address = in.nextLine();
-        System.out.println("Enter email address");
+        in = new Scanner(System.in);
+        System.out.println("Enter Employee's Email");
         String email = in.nextLine();
-        System.out.println("Enter Phone number");
-        long phone = in.nextLong();
-        in.nextLine();
-        System.out.println("Enter the role");
-        String role = in.nextLine();
-        System.out.println("Enter the starting date");
-        String startDate = in.nextLine();
-        System.out.println("Enter the compensation");
-        int compensation = in.nextInt();
-
-        // JDBC CALL to save
-
+        in = new Scanner(System.in);
+        System.out.println("Enter Employee's Phone Number");
+        long phoneNum = Long.parseLong(in.nextLine());
+        in = new Scanner(System.in);
+        System.out.println("Select Employee Role\n 1. Receptionist\n 2. Mechanic");
+        int role = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter Employee's Salary");
+        int salary = in.nextInt();
+        boolean returnFlag = true;
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "INSERT INTO EMPLOYEES VALUES ('" + loginContext.SCID + "', '" + empID + "', '" + fname + "', '" + lname + "', '" +
+                    address + "', '" + email + "', '" + phoneNum + "', '" + role + "', '" + fname + lname + "')";
+            stmt.executeUpdate(sql);
+            try {
+                sql = "INSERT INTO WORKSIN VALUES ('" + loginContext.SCID + "', '" + empID + "', '" + salary + "')";
+                stmt.executeUpdate(sql);
+                System.out.println("Successfully added store employee");
+            } catch (Exception e) {
+                System.out.println("Failed to Create store employee");
+                System.out.println(e);
+                returnFlag = false;
+            }
+            if (!returnFlag) {
+                sql = "DELETE FROM EMPLOYEES WHERE SCID=" + loginContext.SCID + " AND EMPID=" + empID;
+                stmt.executeUpdate(sql);
+                System.out.println("Removed Employee entry");
+            }
+        } catch(Exception e) {
+            System.out.println("Failed to add employee");
+            System.out.println(e);
+        }
     }
 
     public void SetupServicePrices() {
@@ -112,13 +154,19 @@ public class Manager {
 
     public void SetupOperationalHours() {
         Scanner in = new Scanner(System.in);
-        System.out.println("Is the store open on a saturday? 1 for yes and anything else for no");
+        System.out.println("Is the store open on a saturday? 1 for yes and 0 for no");
         int option = in.nextInt();
-        in.nextLine();
-        System.out.println("Press 1 to setup operational hours");
-        int op = in.nextInt();
-        in.nextLine();
-
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "UPDATE TABLE SERVICE_CENTER SET SERVICE_CENTER.OPEN_SATURDAY='" + option + "' where SERVICE_CENTER.SCID=" + loginContext.SCID;
+            stmt.executeUpdate(sql);
+            System.out.println("Successfully updated store operation hours");
+        } catch(Exception e) {
+            System.out.println("Failed to update store operation hours");
+            System.out.println(e);
+        }
     }
 
     public boolean AskManager(long storeId, DBConnection dbConn) {
