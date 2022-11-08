@@ -12,7 +12,7 @@ public class Service {
                 case 1:
                     in = new Scanner(System.in);
                     System.out.println("Enter Service ID:");
-                    int serviceId = in.nextInt();
+                    long serviceId = Long.parseLong(in.nextLine());
                     in = new Scanner(System.in);
                     System.out.println("Enter Service Name:");
                     String serviceName = in.nextLine();
@@ -21,7 +21,7 @@ public class Service {
                     String serviceCategory = in.nextLine();
                     in = new Scanner(System.in);
                     System.out.println("Enter Schedule ID if it is a Maintenance Service. Else enter escape character '0':");
-                    int scheduleId = in.nextInt();
+                    long scheduleId = Long.parseLong(in.nextLine());
                     try {
                         DBConnection dbConn = DBConnection.getDBConnection();
                         dbConn.createConnection();

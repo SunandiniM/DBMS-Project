@@ -121,10 +121,10 @@ public class Manager {
 
     }
 
-    public boolean AskManager(int storeId, DBConnection dbConn) {
+    public boolean AskManager(long storeId, DBConnection dbConn) {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter Manager's id");
-        int empID = in.nextInt();
+        long empID = Long.parseLong(in.nextLine());
         in = new Scanner(System.in);
         System.out.println("Enter Manager's First Name");
         String fname = in.nextLine();

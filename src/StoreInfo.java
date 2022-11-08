@@ -14,7 +14,7 @@ public class StoreInfo {
                     // Get store information
                     in = new Scanner(System.in);
                     System.out.println("Enter store ID:");
-                    int ID = in.nextInt();
+                    long ID = Long.parseLong(in.nextLine());
                     in = new Scanner(System.in);
                     System.out.println("Enter Address:");
                     String address = in.nextLine();
