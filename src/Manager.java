@@ -158,7 +158,7 @@ public class Manager {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql = "UPDATE TABLE SERVICE_CENTER SET SERVICE_CENTER.OPEN_SATURDAY='" + option + "' where SERVICE_CENTER.SCID=" + loginContext.SCID;
+            String sql = "UPDATE SERVICE_CENTER SET SERVICE_CENTER.OPEN_SATURDAY='" + option + "' where SERVICE_CENTER.SCID=" + loginContext.SCID;
             stmt.executeUpdate(sql);
             System.out.println("Successfully updated store operation hours");
         } catch(Exception e) {
