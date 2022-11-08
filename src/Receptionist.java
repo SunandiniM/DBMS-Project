@@ -40,10 +40,10 @@ public class Receptionist {
         String name = in.nextLine();
         System.out.println("Name is " + name);
         System.out.println("Enter Customer Address");
-        String address = in.next();
+        String address = in.nextLine();
 
         System.out.println("Enter email address");
-        String email = in.next();
+        String email = in.nextLine();
 
         System.out.println("Enter Phone Number");
         long phoneNumber = in.nextLong();

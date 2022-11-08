@@ -15,10 +15,10 @@ public class Service {
                     int serviceId = in.nextInt();
                     in = new Scanner(System.in);
                     System.out.println("Enter Service Name:");
-                    String serviceName = in.next();
+                    String serviceName = in.nextLine();
                     in = new Scanner(System.in);
                     System.out.println("Enter Service Category if it is a Repair Service. Else enter escape character '0':");
-                    String serviceCategory = in.next();
+                    String serviceCategory = in.nextLine();
                     in = new Scanner(System.in);
                     System.out.println("Enter Schedule ID if it is a Maintenance Service. Else enter escape character '0':");
                     int scheduleId = in.nextInt();
@@ -30,14 +30,24 @@ public class Service {
                         stmt.executeUpdate(sql);
                         System.out.println("Successfully added a new service");
                         if (!serviceCategory.equals("0")) {
-                            sql = "INSERT INTO REPAIR_SERVICE VALUES ('" + serviceId + "', '" + serviceCategory + "')";
-                            stmt.executeUpdate(sql);
-                            System.out.println("Successfully added repair service");
+                            try {
+                                sql = "INSERT INTO REPAIR_SERVICE VALUES ('" + serviceId + "', '" + serviceCategory + "')";
+                                stmt.executeUpdate(sql);
+                                System.out.println("Successfully added repair service");
+                            } catch(Exception e) {
+                                System.out.println("Failed to add repair service");
+                                System.out.println(e);
+                            }
                         }
                         if (scheduleId != 0) {
-                            sql = "INSERT INTO MAINTAINANCE_SERVICE VALUES ('" + scheduleId + "', '" + serviceId + "')";
-                            stmt.executeUpdate(sql);
-                            System.out.println("Successfully added maintenance service");
+                            try {
+                                sql = "INSERT INTO MAINTAINANCE_SERVICE VALUES ('" + scheduleId + "', '" + serviceId + "')";
+                                stmt.executeUpdate(sql);
+                                System.out.println("Successfully added maintenance service");
+                            } catch(Exception e) {
+                                System.out.println("Failed to add maintenance service");
+                                System.out.println(e);
+                            }
                         }
                         dbConn.closeConnection();
                     } catch(Exception e) {
