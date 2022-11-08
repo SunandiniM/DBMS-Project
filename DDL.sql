@@ -20,7 +20,7 @@ drop table INVOICE;
 
 create table SERVICE_CENTER(  
     SCID number(9) primary key,  
-    ADDRESS varchar(40),  
+    ADDRESS varchar(75),  
     PHONENO number(10), 
     OPEN_SATURDAY number(1) 
 );
@@ -29,7 +29,7 @@ create table EMPLOYEES(
     SCID number(9),  
     EMPID number(9),  
     ENAME varchar(20),  
-    ADDRESS varchar(40),  
+    ADDRESS varchar(75),  
     EMAIL varchar(30),  
     PHONENO number(10),  
     EROLE varchar(12),
