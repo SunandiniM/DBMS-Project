@@ -20,7 +20,7 @@ public class StoreInfo {
                     String address = in.nextLine();
                     in = new Scanner(System.in);
                     System.out.println("Enter Phone Number:");
-                    int phoneNum = in.nextInt();
+                    long phoneNum = Long.parseLong(in.nextLine());
                     // GET MANAGER's information
                     in = new Scanner(System.in);
                     System.out.println("Get Min wage for mechnics");

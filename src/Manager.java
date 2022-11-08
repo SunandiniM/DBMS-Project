@@ -139,7 +139,7 @@ public class Manager {
         String email = in.nextLine();
         in = new Scanner(System.in);
         System.out.println("Enter Manager's Phone Number");
-        int phoneNum = in.nextInt();
+        long phoneNum = Long.parseLong(in.nextLine());
         in = new Scanner(System.in);
         System.out.println("Enter Manager's Salary");
         int salary = in.nextInt();
