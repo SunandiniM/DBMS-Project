@@ -15,33 +15,34 @@ public class Login {
             loginContext.role = "ADMIN";
             return loginContext;
         }
+
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
             String sql1 = "SELECT * FROM CUSTOMER WHERE CID=" + username + " AND SCID=" + centerId + " AND LNAME='" + password + "'";
             ResultSet rs1 = stmt.executeQuery(sql1);
-            if (rs1.isBeforeFirst()) {
+            if (rs1 != null && rs1.isBeforeFirst()) {
                 loginContext.SCID = centerId;
                 loginContext.ID = username;
                 loginContext.role = "CUSTOMER";
             } else {
                 String sql2 = "SELECT * FROM EMPLOYEES WHERE EMPID=" + username + " AND SCID=" + centerId + " AND LNAME='" + password + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
-
-                if (rs2.isBeforeFirst()) {
+                if (rs2 != null && rs2.isBeforeFirst()) {
                     loginContext.SCID = centerId;
                     loginContext.ID = username;
                     while (rs2.next()) {
                         loginContext.role = rs2.getString("EROLE");
                     }
+                    System.out.println("Role : " + loginContext.role);
                 } else {
                     System.out.println("Failed to Login. Please enter valid details.");
-                    dbConn.closeConnection();
+//                    dbConn.closeConnection();
                     return null;
                 }
             }
-            dbConn.closeConnection();
+//            dbConn.closeConnection();
             System.out.println("Successfully logged in");
         } catch (Exception e) {
             System.out.println("Failed to login");

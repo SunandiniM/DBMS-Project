@@ -36,10 +36,11 @@ public class Mechanic {
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             Connection conn = dbConn.createConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM HOURLY_EMPLOYEES_SCHEDULE WHERE SCID = ? AND EMPID = ?");
-            stmt.setString(1, loginContext.SCID);
-            stmt.setString(2, loginContext.ID);
-            ResultSet rs = stmt.executeQuery();
+            String sql1 = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE WHERE SCID = " + loginContext.SCID + " AND EMPID = " + loginContext.ID;
+
+//            System.out.println("Query : " + sql1);
+            Statement stmt = dbConn.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql1);
 
             while(rs.next()) {
                 // print the order_id, week, starting slot, ending slot
@@ -47,7 +48,7 @@ public class Mechanic {
 
 
         } catch(Exception e) {
-            System.out.println("Failed to print the schedule of the mechanic");
+            System.out.println("Failed to print the schedule of the mechanic" + e);
 
         }
     }
@@ -78,22 +79,10 @@ public class Mechanic {
             try {
                 DBConnection dbConn = DBConnection.getDBConnection();
                 Connection conn = dbConn.createConnection();
-                PreparedStatement stmt = conn.prepareStatement("INSERT INTO REQUEST_TIMEOFF VALUES(?, ?, ?, ?, ?, ?, ?)");
-                stmt.setString(1, loginContext.SCID);
-                stmt.setString(2, loginContext.ID);
-                stmt.setString(3, day + "");
-                stmt.setString(4, week + "");
-                stmt.setString(5, startSlot + "");
-                stmt.setString(6, endSlot + "");
-                stmt.setString(7, 0 + "");
-
-                System.out.println(stmt.toString());
-                stmt.executeQuery();
-
-                if(stmt.executeUpdate() == 0)
-                    System.out.println("Request for timeoff failed to submit");
-                else
-                    System.out.println("Request for timeoff successfully submitted");
+                Statement stmt = dbConn.conn.createStatement();
+                String sql1 = "INSERT INTO TIMEOFF_REQUEST VALUES( " + loginContext.SCID + ", " + loginContext.ID + ", " + day + ", " + week + ", " + startSlot + ", " + endSlot + ", " + 0 + ")";
+//                System.out.println(sql1);
+                stmt.executeUpdate(sql1);
             } catch(Exception e) {
                 System.out.println("Met with this exception while committing to the database " + e);
             }
@@ -135,7 +124,11 @@ public class Mechanic {
             try {
                 DBConnection dbConn = DBConnection.getDBConnection();
                 Connection conn = dbConn.createConnection();
-                PreparedStatement stmt = conn.prepareStatement("INSERT INTO SWAP_REQUEST VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+                String sql1 = "INSERT INTO SWAP_REQUEST(SCID, EMPID, REQUESTED_EMP_ID, DAY, WEEK, START_SLOT, END_SLOT, STATUS) " +
+                        "VALUES( " + loginContext.SCID+ ","+ loginContext.ID + ","+  empID + "," + day + "," + week + "," + startSlot + "," + endSlot+ ", 0)";
+//                System.out.println(sql1);
+                Statement stmt = dbConn.conn.createStatement();
+                /*PreparedStatement stmt = conn.prepareStatement("INSERT INTO SWAP_REQUEST(SCID, EMPID, REQUESTED_EMP_ID, DAY, WEEK, START_SLOT, END_SLOT, STATUS) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
                 stmt.setString(1, loginContext.SCID);
                 stmt.setString(2, loginContext.ID);
                 stmt.setString(3, empID);
@@ -145,13 +138,8 @@ public class Mechanic {
                 stmt.setString(7, endSlot + "");
                 stmt.setString(8, 0+ "");
 
-                System.out.println(stmt.toString());
-                stmt.executeQuery();
-
-                if(stmt.executeUpdate() == 0)
-                    System.out.println("Request for swap request failed to submit");
-                else
-                    System.out.println("Request for swap request successfully submitted");
+                System.out.println(stmt.toString());*/
+                stmt.executeUpdate(sql1);
             } catch(Exception e) {
                 System.out.println("Met with this exception while committing to the database " + e);
             }
@@ -190,7 +178,6 @@ public class Mechanic {
                 Connection conn = dbConn.createConnection();
                 PreparedStatement stmt = conn.prepareStatement("UPDATE SWAP_REQUEST SET STATUS=1 WHERE REQUEST_ID=?");
                 stmt.setString(1, requestID);
-                System.out.println(stmt.toString());
                 stmt.executeQuery();
 
                 if(stmt.executeUpdate() == 0)
@@ -207,7 +194,6 @@ public class Mechanic {
                 Connection conn = dbConn.createConnection();
                 PreparedStatement stmt = conn.prepareStatement("UPDATE SWAP_REQUEST SET STATUS = 0 WHERE REQUEST_ID=?");
                 stmt.setString(1, requestID);
-                System.out.println(stmt.toString());
                 stmt.executeQuery();
 
                 if(stmt.executeUpdate() == 0)
