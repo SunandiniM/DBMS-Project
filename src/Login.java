@@ -37,16 +37,12 @@ public class Login {
                     }
                 } else {
                     System.out.println("Failed to Login. Please enter valid details.");
-                    dbConn.conn.commit();
                     dbConn.closeConnection();
                     return null;
                 }
             }
-            dbConn.conn.commit();
             dbConn.closeConnection();
             System.out.println("Successfully logged in");
-            dbConn.conn.commit();
-            dbConn.closeConnection();
         } catch (Exception e) {
             System.out.println("Failed to login");
         }
@@ -57,6 +53,7 @@ public class Login {
 //        loginContext.role = "MECHANIC";
         // check from JDBC if the user exists and return the role
         // based on the role create the landing page
+        System.out.println(loginContext);
         return loginContext;
     }
 

@@ -42,7 +42,6 @@ public class AdminLandingPage {
                         sql = "INSERT INTO REPAIR_SERVICE VALUES ('" + serviceId + "', '" + serviceCategory + "')";
                         stmt.executeUpdate(sql);
                         System.out.println("Successfully added a new service");
-                        dbConn.conn.commit();
                         dbConn.closeConnection();
                     } catch(Exception e) {
                         System.out.println("Failed to add a new service");
