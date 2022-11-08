@@ -158,7 +158,6 @@ public class Manager {
                 System.out.println(e);
                 returnFlag = false;
             }
-            dbConn.closeConnection();
         } catch(Exception e) {
             System.out.println("Failed to create manager");
             System.out.println(e);

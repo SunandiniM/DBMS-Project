@@ -43,7 +43,6 @@ public class StoreInfo {
                             stmt.executeUpdate(sql);
                             System.out.println("Removed Store Successfully");
                         }
-                        dbConn.closeConnection();
                     } catch(Exception e) {
                         System.out.println("Failed to create store");
                         System.out.println(e);
