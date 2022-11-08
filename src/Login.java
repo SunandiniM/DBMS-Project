@@ -45,6 +45,7 @@ public class Login {
             System.out.println("Successfully logged in");
         } catch (Exception e) {
             System.out.println("Failed to login");
+            System.out.println(e);
         }
         // check from JDBC if the user exists and return the role
         // based on the role create the landing page

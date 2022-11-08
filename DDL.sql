@@ -212,3 +212,13 @@ END;
  
 /
 
+
+create or replace trigger avoidIncorrrectRepairCategory
+before insert or update on REPAIR_SERVICE
+for each row
+begin
+    if :new.CATEGORY not in ('Engine Services', 'Exhaust Services', 'Electrical Services', 'Transmission Services', 'Tire Services', 'Heating and A/C Services') then
+        raise_application_error(-20000, 'Category should be one of Engine Services, Exhaust Services, Electrical Services, Transmission Services, Tire Services, Heating and A/C Services');
+    end if;
+end demo_hide_foo_trg;
+/

@@ -42,6 +42,7 @@ public class Service {
                         dbConn.closeConnection();
                     } catch(Exception e) {
                         System.out.println("Failed to add a new service");
+                        System.out.println(e);
                     }
                     break;
                 case 2:
