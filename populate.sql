@@ -215,50 +215,62 @@ VALUES(30003, 10501, 'P39VN198');
 INSERT INTO OWNS 
 VALUES(30003, 10010, '39YVS415');
 
-INSERT INTO SERVICE(SID, SNAME, TYPE) 
-VALUES(101, 'Belt Replacement', 'Repair Service');
+INSERT INTO SERVICE(SID, SNAME)
+VALUES(97, 'Oil Changes');
 
 INSERT INTO SERVICE 
-VALUES(102, 'Engine Repair', 'Repair Service');
+VALUES(98, 'Filter Replacements');
 
 INSERT INTO SERVICE 
-VALUES(103, 'Exhaust Repair', 'Repair Service');
+VALUES(99, 'Check Engine Light Diagnostics');
+
+INSERT INTO SERVICE
+VALUES(100, 'Suspension Repair');
 
 INSERT INTO SERVICE 
-VALUES(104, 'Muffler Repair', 'Repair Service');
+VALUES(101, 'Belt Replacement');
 
 INSERT INTO SERVICE 
-VALUES(105, 'Alternator Repair', 'Repair Service');
+VALUES(102, 'Engine Repair');
 
 INSERT INTO SERVICE 
-VALUES(106, 'Power Lock Repair', 'Repair Service');
+VALUES(103, 'Exhaust Repair');
 
 INSERT INTO SERVICE 
-VALUES(107, 'Axle Repair', 'Repair Service');
+VALUES(104, 'Muffler Repair');
 
 INSERT INTO SERVICE 
-VALUES(108, 'Brake Repair', 'Repair Service');
+VALUES(105, 'Alternator Repair');
 
 INSERT INTO SERVICE 
-VALUES(109, 'Tire Balancing', 'Repair Service');
+VALUES(106, 'Power Lock Repair');
 
 INSERT INTO SERVICE 
-VALUES(110, 'Wheel Alignment', 'Repair Service');
+VALUES(107, 'Axle Repair');
 
 INSERT INTO SERVICE 
-VALUES(111, 'Compressor Repair', 'Repair Service');
+VALUES(108, 'Brake Repair');
 
 INSERT INTO SERVICE 
-VALUES(112, 'Evaporator Repair', 'Repair Service');
+VALUES(109, 'Tire Balancing');
 
 INSERT INTO SERVICE 
-VALUES(113, 'A', 'Maintainance Service');
+VALUES(110, 'Wheel Alignment');
 
 INSERT INTO SERVICE 
-VALUES(114, 'B', 'Maintainance Service');
+VALUES(111, 'Compressor Repair');
 
 INSERT INTO SERVICE 
-VALUES(115, 'C', 'Maintainance Service');
+VALUES(112, 'Evaporator Repair');
+
+INSERT INTO SERVICE 
+VALUES(113, 'A');
+
+INSERT INTO SERVICE 
+VALUES(114, 'B');
+
+INSERT INTO SERVICE 
+VALUES(115, 'C');
 
 INSERT INTO REPAIR_SERVICE(SID, CATEGORY) 
 VALUES(101, 'Engine Services');
@@ -296,41 +308,41 @@ VALUES(111, 'Heating and A/C Services');
 INSERT INTO REPAIR_SERVICE 
 VALUES(112, 'Heating and A/C Services');
 
-INSERT INTO MAINTAINANCE_SERVICE(SID, MSNAME) 
-VALUES(113, 'Oil Changes');
+INSERT INTO MAINTAINANCE_SERVICE(SCHEDULE_ID, SERVICE_ID) 
+VALUES(113, 97);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(113, 'Filter Replacements');
+VALUES(113, 98);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(114, 'Oil Changes');
+VALUES(114, 97);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(114, 'Filter Replacements');
+VALUES(114, 98);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(114, 'Brake Repair');
+VALUES(114, 108);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(114, 'Check Engine Light Diagnostics');
+VALUES(114, 99);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(115, 'Oil Changes');
+VALUES(115, 97);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(115, 'Filter Replacements');
+VALUES(115, 98);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(115, 'Brake Repair');
+VALUES(115, 108);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(115, 'Check Engine Light Diagnostics');
+VALUES(115, 99);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(115, 'Suspension Repair');
+VALUES(115, 100);
 
 INSERT INTO MAINTAINANCE_SERVICE 
-VALUES(115, 'Evaporator Repair');
+VALUES(115, 112);
 
 INSERT INTO OFFERS(SID, SCID, MFG, DURATION, PRICE) 
 VALUES(101, 30001, 'Honda', 1, 140);
