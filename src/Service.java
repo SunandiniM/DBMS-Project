@@ -1,5 +1,5 @@
 import java.sql.Statement;
-import java.util.Scanner;
+import java.util.*;
 
 public class Service {
     public void AskService() {
@@ -17,11 +17,11 @@ public class Service {
                     System.out.println("Enter Service Name:");
                     String serviceName = in.nextLine();
                     in = new Scanner(System.in);
-                    System.out.println("Enter Service Category if it is a Repair Service. Else enter escape character '0':");
+                    System.out.println("Enter Service Category if it is a Repair Service. Else enter escape character '-'");
                     String serviceCategory = in.nextLine();
                     in = new Scanner(System.in);
-                    System.out.println("Enter Schedule ID if it is a Maintenance Service. Else enter escape character '0':");
-                    long scheduleId = Long.parseLong(in.nextLine());
+                    System.out.println("Enter comma separated Schedule ID's if it is a Maintenance Service. Else enter escape character '-'");
+                    String scheduleIdStr = in.nextLine();
                     try {
                         DBConnection dbConn = DBConnection.getDBConnection();
                         dbConn.createConnection();
@@ -39,14 +39,21 @@ public class Service {
                                 System.out.println(e);
                             }
                         }
-                        if (scheduleId != 0) {
-                            try {
-                                sql = "INSERT INTO MAINTAINANCE_SERVICE VALUES ('" + scheduleId + "', '" + serviceId + "')";
-                                stmt.executeUpdate(sql);
-                                System.out.println("Successfully added maintenance service");
-                            } catch(Exception e) {
-                                System.out.println("Failed to add maintenance service");
-                                System.out.println(e);
+                        if (!scheduleIdStr.equals("-")) {
+                            String[] strParts = scheduleIdStr.split(",");
+                            List<String> strList = Arrays.asList(strParts);
+                            List<Integer> intList = new ArrayList<>();
+                            for(String s : strList) intList.add(Integer.valueOf(s));
+                            Collections.sort(intList, Collections.reverseOrder());
+                            for (Integer i : intList) {
+                                try {
+                                    sql = "INSERT INTO MAINTAINANCE_SERVICE VALUES ('" + i + "', '" + serviceId + "')";
+                                    stmt.executeUpdate(sql);
+                                    System.out.println("Successfully added maintenance service for schedule " + i);
+                                } catch(Exception e) {
+                                    System.out.println("Failed to add maintenance service");
+                                    System.out.println(e);
+                                }
                             }
                         }
                     } catch(Exception e) {
