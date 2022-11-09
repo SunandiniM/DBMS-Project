@@ -54,6 +54,9 @@ public class CustomerProfile {
         Scanner in = new Scanner(System.in);
         System.out.println("Press 1 to delete a car from the profile or any other key to go back");
         int option = in.nextInt();
+        in.nextLine();
+        System.out.println("You selected " + option);
+
         if (option == 1) {
             System.out.println("Enter the vin number of the car you want to delete");
             String vin = in.nextLine();
@@ -63,20 +66,12 @@ public class CustomerProfile {
                 DBConnection dbConn = DBConnection.getDBConnection();
                 dbConn.createConnection();
                 Statement stmt = dbConn.conn.createStatement();
-                String sql1 = "DELETE FROM VEHICLE WHERE VIN =" + "'" + vin + "'";
+                String sql1 = "DELETE FROM VEHICLE WHERE VIN_NO =" + "'" + vin + "'";
+                stmt.executeUpdate(sql1);
+                sql1 = "DELETE FROM OWNS WHERE VIN_NO =" + "'" + vin + "' AND CID =" + loginContext.ID;
                 stmt.executeUpdate(sql1);
             }catch (Exception e) {
                 System.out.println("Failed to delete vehicle "+e);
-            }
-
-            try {
-                DBConnection dbConn = DBConnection.getDBConnection();
-                dbConn.createConnection();
-                Statement stmt = dbConn.conn.createStatement();
-                String sql1 = "DELETE FROM OWNS WHERE VIN =" + "'" + vin + "' AND CID =" + loginContext.ID;
-                stmt.executeUpdate(sql1);
-            }catch (Exception e) {
-                System.out.println("Failed to delete vehicle from OWNS " + e);
             }
         }else {
             return;
@@ -111,6 +106,17 @@ public class CustomerProfile {
                 stmt.executeUpdate(sql);
             }catch (Exception e) {
                 System.out.println("Failed to add vehicle " + e);
+            }
+
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql = "INSERT INTO OWNS VALUES (" +loginContext.SCID + ", " + loginContext.ID + ", '" + vin + "')";
+                stmt.executeUpdate(sql);
+                System.out.println("Successfully added a new customer profile");
+            }catch (Exception e) {
+                System.out.println("Failed to add in OWNED_BY" + e);
             }
         }else{
             return;

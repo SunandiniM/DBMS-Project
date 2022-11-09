@@ -208,4 +208,13 @@ public class Mechanic {
         }
 
     }
+
+    public MechanicFreeSlot getFreeSlot(int duration) {
+        MechanicFreeSlot result = new MechanicFreeSlot();
+        result.startSlot = 0;
+        result.endSlot = 5;
+        result.EMPID = 122;
+
+        return result;
+    }
 }
