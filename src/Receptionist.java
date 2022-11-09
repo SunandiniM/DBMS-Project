@@ -144,28 +144,13 @@ public class Receptionist {
             return;
         }
         in.nextLine();
-        System.out.println("Enter Customer ID");
-        String custID = in.nextLine();
-
-        System.out.println("Enter Customer Name");
-        String custName = in.nextLine();
-
-        System.out.println("Enter Invoice ID");
-        String invoiceID = in.nextLine();
-
-        System.out.println("Enter Invoice Date");
-        String invoiceDate = in.nextLine();
-
-        System.out.println("Enter Amount");
-        double amount = in.nextDouble();
-        in.nextLine();
         // JDBC Call to get the invoice
         try{
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
-            PreparedStatement statement = dbConn.createConnection().
-                    prepareStatement("SELECT ORDER_ID, DATE, BILL FROM INVOICE I, SERVICE_EVENT E WHERE I.status = 0");
-            ResultSet rs = statement.executeQuery();
+            Statement statement = dbConn.createConnection().createStatement();
+            ResultSet rs = statement.executeQuery("SELECT C.FNAME, C.LNAME, I.ORDER_ID, I.BILL FROM CUSTOMER C, INVOICE I WHERE C.SCID = I.SCID AND C.CID = I.CID AND I.STATUS = 0");
+            System.out.println("Customer Name, Invoice ID, Invoice Amount");
             while(rs.next())
             {
                 System.out.println(rs.getString(1) + " " + rs.getString(2) + rs.getString(3) + " " + rs.getString(4));
