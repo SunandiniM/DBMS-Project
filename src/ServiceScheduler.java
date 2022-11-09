@@ -1,49 +1,97 @@
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class ServiceScheduler {
     public void Menu(LoginContext loginContext) {
-        Scanner in = new Scanner(System.in);
-        System.out.println("Enter VIN Number");
-        String vinNumber = in.nextLine();
-        System.out.println("Enter the current mileage");
-        Double mileage = in.nextDouble();
-
-        System.out.println("Enter 1 to Add Schedule Maintainance");
-        System.out.println("Enter 2 to Add Schedule Repair");
-        System.out.println("Enter 3 to View cart and select schedule time");
-        System.out.println("Enter anything else to go back");
-        int option = in.nextInt();
-        Cart cartObj = new Cart();
-
-        switch (option){
-            case 1:
-                cartObj = ScheduleMaintainance(vinNumber, cartObj);
-                if (cartObj == null) {
-                    Menu(loginContext);
+        ResultSet rs;
+        DBConnection dbConn;
+        String sql;
+        Statement stmt;
+        Scanner in;
+        String vinNumber;
+        Double mileage;
+        while (true) {
+            in = new Scanner(System.in);
+            System.out.println("Enter VIN Number");
+            vinNumber = in.nextLine();
+            System.out.println("Enter the current mileage");
+            mileage = in.nextDouble();
+            try {
+                dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                stmt = dbConn.conn.createStatement();
+                sql = "select * from OWNS where SCID=" + loginContext.SCID + " and CID=" + loginContext.ID + " and VIN_NO=" + vinNumber;
+                rs = stmt.executeQuery(sql);
+                if (rs != null && rs.isBeforeFirst()) {
+                    break;
+                } else {
+                    System.out.println("No Car with this Vin number is owned by the Customer");
                 }
-            case 2:
-
-            case 3:
-            default:
-
+            } catch(Exception e) {
+                System.out.println("No Car with this Vin number is owned by the Customer");
+                System.out.println(e);
+            }
+        }
+        Cart cartObj = new Cart();
+        while (true) {
+            System.out.println("Enter 1 to Add Schedule Maintenance");
+            System.out.println("Enter 2 to Add Schedule Repair");
+            System.out.println("Enter 3 to View cart and select schedule time");
+            System.out.println("Enter 4 to go back");
+            int option = in.nextInt();
+            switch (option){
+                case 1:
+                    cartObj = ScheduleMaintainance(vinNumber, cartObj);
+                    if (cartObj == null) {
+                        Menu(loginContext);
+                    }
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    return;
+                default:
+                    break;
+            }
         }
     }
 
 
     public Cart ScheduleMaintainance(String vin, Cart cart) {
-        // Display which next maintainance is the customer eligible for:
+        String nextSchedule = "A";
 
-        String NextMaintainance = "A";
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "select SCHEDULE from VEHICLE where VIN_NO=" + vin;
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs != null && rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    nextSchedule = rs.getString("SCHEDULE");
+                }
+            }
+        } catch(Exception e) {
+            System.out.println("Failed to fetch maintenance schedule details");
+            System.out.println(e);
+        }
+        if (nextSchedule == "A") {
+            nextSchedule = "B";
+        } else if (nextSchedule == "B") {
+            nextSchedule = "C";
+        } else {
+            nextSchedule = "A";
+        }
         Scanner in = new Scanner(System.in);
-        System.out.println("Press 1 to add this maintainance schedule in the cart");
+        System.out.println("Press 1 to add maintenance schedule" + nextSchedule + " in the cart");
         System.out.println("Press 2 to go back");
         int option = in.nextInt();
         if (option == 1){
-            cart.Maintainance = NextMaintainance;
-        }else{
-            return null;
+            cart.Maintainance = nextSchedule;
         }
-
         return cart;
     }
 
