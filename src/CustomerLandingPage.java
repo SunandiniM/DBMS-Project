@@ -14,12 +14,17 @@ public class CustomerLandingPage {
             case 1:
                 CustomerProfile customerProfileObj = new CustomerProfile();
                 customerProfileObj.AskForProfile(loginContext);
+                AskCustomer(loginContext);
                 break;
             case 2:
                 AskToViewAndScheduleService(loginContext);
+                AskCustomer(loginContext);
                 break;
             case 3:
-
+            case 4:
+                // logout code
+            default:
+                return;
         }
     }
 
