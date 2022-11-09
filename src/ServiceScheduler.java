@@ -42,7 +42,7 @@ public class ServiceScheduler {
             int option = in.nextInt();
             switch (option){
                 case 1:
-                    cartObj = ScheduleMaintainance(vinNumber, cartObj);
+                    cartObj = ScheduleMaintainance(vinNumber, cartObj, loginContext);
                     break;
                 case 2:
                     cartObj = ScheduleRepairService(vinNumber, cartObj, loginContext);
@@ -58,7 +58,7 @@ public class ServiceScheduler {
     }
 
 
-    public Cart ScheduleMaintainance(String vin, Cart cart) {
+    public Cart ScheduleMaintainance(String vin, Cart cart, LoginContext loginContext) {
         String nextSchedule = "A";
 
         try {
@@ -89,6 +89,31 @@ public class ServiceScheduler {
         int option = in.nextInt();
         if (option == 1){
             cart.Maintainance = nextSchedule;
+            cart.MaintenanceCost = 0;
+            int sid = 113;
+            if (nextSchedule.equals("B")) {
+                sid = 114;
+            } else if (nextSchedule.equals("C")) {
+                sid = 115;
+            }
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql = "select PRICE from OFFERS o, VEHICLE v where v.VIN_NO='" +
+                        vin + "' and o.SCID=" + loginContext.SCID + " and o.SID=" + sid + " and o.MFG=v.MFG";
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs != null && rs.isBeforeFirst()) {
+                    while (rs.next()) {
+                        cart.MaintenanceCost = rs.getInt("PRICE");
+                    }
+                }
+                System.out.println(cart.Maintainance);
+                System.out.println(cart.MaintenanceCost);
+            } catch(Exception e) {
+                System.out.println("Failed to fetch maintenance schedule details");
+                System.out.println(e);
+            }
         }
         return cart;
     }
