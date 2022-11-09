@@ -294,19 +294,19 @@ begin
 end checkMaxAndMinSalaries;
 /
 
-create or replace trigger checkOneReceptionistPerStore
-before insert or update on EMPLOYEES
-for each row
-declare
-    pragma autonomous_transaction;
-    count_ number;
-begin
-    SELECT COUNT(*) INTO count_ FROM EMPLOYEES WHERE SCID=:new.SCID and EROLE = 'RECEPTIONIST' GROUP BY SCID;
-    if count_ > 0 then
-        raise_application_error(-20000, 'Only one receptionist per store');
-    end if;
-end checkMaxAndMinSalaries;
-/
+-- create or replace trigger checkOneReceptionistPerStore
+-- before insert or update on EMPLOYEES
+-- for each row
+-- declare
+--     pragma autonomous_transaction;
+--     count_ number;
+-- begin
+--     SELECT COUNT(*) INTO count_ FROM EMPLOYEES WHERE SCID=:new.SCID and EROLE = 'RECEPTIONIST' GROUP BY SCID;
+--     if count_ > 0 then
+--         raise_application_error(-20000, 'Only one receptionist per store');
+--     end if;
+-- end checkMaxAndMinSalaries;
+-- /
 
 create or replace trigger deactivateUserProfile
 after delete on OWNS
