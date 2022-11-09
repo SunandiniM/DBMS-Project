@@ -43,10 +43,9 @@ public class ServiceScheduler {
             switch (option){
                 case 1:
                     cartObj = ScheduleMaintainance(vinNumber, cartObj);
-                    System.out.println("Schedule Maintenance Value" + cartObj.Maintainance);
                     break;
                 case 2:
-                    cartObj = ScheduleRepairService(vinNumber, cartObj);
+                    cartObj = ScheduleRepairService(vinNumber, cartObj, loginContext);
                     break;
                 case 3:
                     break;
@@ -85,7 +84,7 @@ public class ServiceScheduler {
             nextSchedule = "A";
         }
         Scanner in = new Scanner(System.in);
-        System.out.println("Press 1 to add maintenance schedule" + nextSchedule + " in the cart");
+        System.out.println("Press 1 to add maintenance schedule " + nextSchedule + " in the cart");
         System.out.println("Press 2 to go back");
         int option = in.nextInt();
         if (option == 1){
@@ -94,7 +93,22 @@ public class ServiceScheduler {
         return cart;
     }
 
-    public Cart ScheduleRepairService(String vin, Cart cart) {
+    public Cart ScheduleRepairService(String vin, Cart cart, LoginContext loginContext) {
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "select DISTINCT s.CATEGORY from REPAIR_SERVICE s, OFFERS o where o.scid=30001 and o.SID=s.SID";
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs != null && rs.isBeforeFirst()) {
+                while (rs.next()) {
+//                    nextSchedule = rs.getString("SCHEDULE");
+                }
+            }
+        } catch(Exception e) {
+            System.out.println("Failed to fetch maintenance schedule details");
+            System.out.println(e);
+        }
         String[] listOfCategories = {"Engine Services", "Exhaust Services", "Electrical Services",
                 "Transmission Services", "Tire Services", "Heating and AC Services"};
 
