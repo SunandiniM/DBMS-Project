@@ -17,7 +17,8 @@ public class Main {
                     AdminLandingPage adminLandingPageObj = new AdminLandingPage();
                     adminLandingPageObj.AskAdmin();
                 } else if (loginContext.role.equals("CUSTOMER")) {
-
+                    CustomerLandingPage customerLandingPage = new CustomerLandingPage();
+                    customerLandingPage.AskCustomer(loginContext);
                 } else if (loginContext.role.equals("RECEPTIONIST")) {
                     Receptionist receptionist = new Receptionist();
                     receptionist.LandingPageMenu(loginContext);
