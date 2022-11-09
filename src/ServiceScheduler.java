@@ -232,9 +232,10 @@ public class ServiceScheduler {
             System.out.println("Failed to fetch maintenance schedule details");
             System.out.println(e);
         }
-        if (nextSchedule == "A") {
+
+        if (nextSchedule.equals("A")) {
             nextSchedule = "B";
-        } else if (nextSchedule == "B") {
+        } else if (nextSchedule.equals("B")) {
             nextSchedule = "C";
         } else {
             nextSchedule = "A";
@@ -401,6 +402,11 @@ public class ServiceScheduler {
                         Statement stmt = dbConn.createConnection().createStatement();
                         String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + cart.vinNumber + "')";
                         stmt.executeUpdate(sql);
+
+                        Statement stmt2 = dbConn.createConnection().createStatement();
+                        sql = "UPDATE VEHICLE SET SCHEDULE = '" + cart.Maintainance + "' WHERE VIN_NO = '" + cart.vinNumber + "'";
+                        System.out.println(sql);
+                        stmt2.executeUpdate(sql);
                 }
             }catch (Exception e) {
                 System.out.println("Failed to put in service event " + e);

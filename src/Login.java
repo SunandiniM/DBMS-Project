@@ -34,7 +34,7 @@ public class Login {
                 }
                 System.out.println(loginContext.ID);
             } else {
-                String sql2 = "SELECT * FROM EMPLOYEES WHERE EMPID=" + username + " AND SCID=" + centerId + " AND LNAME='" + password + "'";
+                String sql2 = "SELECT * FROM EMPLOYEES WHERE EMPID='" + username + "' AND SCID=" + centerId + " AND LNAME='" + password + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
 
 
