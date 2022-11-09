@@ -154,28 +154,32 @@ public class Mechanic {
         int option = in.nextInt();
         if (option == 1) {
             try {
+                int selfOrderId = 0;
+                int reqOrderId = 0;
                 DBConnection dbConn = DBConnection.getDBConnection();
-                String sql = "select ORDER_ID,  week, day, start_slot, end_slot from HOURLY_EMPLOYEE_SCHEDULE" +
-                        " where ORDER_ID<>-1 and EMPID=" + loginContext.ID + " and SCID=" + loginContext.SCID + " order by ORDER_ID";
+                String sql = "select ORDER_ID, WEEK, DAY, START_SLOT, END_SLOT from HOURLY_EMPLOYEE_SCHEDULE" +
+                        " where ORDER_ID!=-1 and EMPID=" + loginContext.ID + " and SCID=" + loginContext.SCID + " order by ORDER_ID";
                 Statement stmt = dbConn.conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 boolean selfSlot = false;
                 while (rs.next()) {
-                    if (rs.getInt("start_week") == week && rs.getInt("start_day") == day
-                            && rs.getInt("start_slot") == start_slot && rs.getInt("end_slot") == end_slot) {
+                    if (rs.getInt("WEEK") == week && rs.getInt("DAY") == day
+                            && rs.getInt("START_SLOT") == start_slot && rs.getInt("END_SLOT") == end_slot) {
                         selfSlot = true;
+                        selfOrderId = rs.getInt("ORDER_ID");
                         break;
                     }
                 }
-                sql = "select ORDER_ID,  week, day, start_slot, end_slot from HOURLY_EMPLOYEE_SCHEDULE" +
+                sql = "select ORDER_ID, WEEK, DAY, START_SLOT, END_SLOT from HOURLY_EMPLOYEE_SCHEDULE" +
                         " where ORDER_ID<>-1 and EMPID=" + empID + " and SCID=" + loginContext.SCID + " order by ORDER_ID";
                 stmt = dbConn.conn.createStatement();
                 rs = stmt.executeQuery(sql);
                 boolean reqSlot = false;
                 while (rs.next()) {
-                    if (rs.getInt("start_week") == rweek && rs.getInt("start_day") == rday
-                            && rs.getInt("start_slot") == rstart_slot && rs.getInt("end_slot") == rend_slot) {
+                    if (rs.getInt("WEEK") == rweek && rs.getInt("DAY") == rday
+                            && rs.getInt("START_SLOT") == rstart_slot && rs.getInt("END_SLOT") == rend_slot) {
                         reqSlot = true;
+                        reqOrderId = rs.getInt("ORDER_ID");
                         break;
                     }
                 }
@@ -189,7 +193,7 @@ public class Mechanic {
                 selfDurations.put(2, 0);
                 selfDurations.put(3, 0);
                 selfDurations.put(4, 0);
-                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + loginContext.SCID + " and EMPID=" + loginContext.ID;
+                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + loginContext.SCID + " and EMPID=" + loginContext.ID + " and ORDER_ID<>" + selfOrderId;
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     int currDurr = rs.getInt("WEEK") + rs.getInt("END_SLOT") - rs.getInt("START_SLOT");
@@ -208,7 +212,7 @@ public class Mechanic {
                 reqDurations.put(2, 0);
                 reqDurations.put(3, 0);
                 reqDurations.put(4, 0);
-                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + empID + " and EMPID=" + loginContext.ID;
+                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + loginContext.SCID + " and EMPID=" + empID + " and ORDER_ID<>" + reqOrderId;
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     int currDurr = rs.getInt("WEEK") + rs.getInt("END_SLOT") - rs.getInt("START_SLOT");
@@ -241,9 +245,10 @@ public class Mechanic {
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql = "INSERT INTO SWAP_REQUEST VALUES('" + SCID + "', '" + empid + "', '" + req_empid
+            String sql = "INSERT INTO SWAP_REQUEST(SCID, EMPID, REQ_EMP_ID, DAY, WEEK, START_SLOT, END_SLOT, REQ_DAY, REQ_WEEK, REQ_START_SLOT, REQ_END_SLOT, STATUS)" +
+                    " VALUES('" + SCID + "', '" + empid + "', '" + req_empid
                     + "', '" + day + "', '" + week + "', '" + start + "', '" + stop
-                    + "', '" + rday + "', '" + rweek + "', '" + rstart + "', '" + rstop +"')";
+                    + "', '" + rday + "', '" + rweek + "', '" + rstart + "', '" + rstop + "', '" + status +"')";
             stmt.executeUpdate(sql);
         } catch(Exception e) {
             System.out.println("Failed to insert swap request");
