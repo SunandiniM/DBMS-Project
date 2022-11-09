@@ -179,7 +179,7 @@ public class ServiceScheduler {
         return cart;
     }
 
-    public void SubmitOrder(LoginContext loginContext, Cart cart) {
+    public void SubmitOrder(LoginContext loginContext, Cart cart, MechanicFreeSlot mechanicFreeSlot) {
         // assumes the cart is filled and has th
         int cost = cart.getTotalCost();
         int invoiceID = -1;
@@ -218,7 +218,11 @@ public class ServiceScheduler {
             System.out.println("Trying to update service event " + e);
         }
 
-        MechanicFreeSlot mechanicFreeSlot = (new Mechanic().getFreeSlot(cart.getTotalDuration()));
+        // place this statement where the user will select it
+//        ArrayList<MechanicFreeSlot> mechanicFreeSlot = (new Mechanic().getFreeSlot(loginContext, cart.getTotalDuration()));
+
+        // show the user and get the slots
+
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();

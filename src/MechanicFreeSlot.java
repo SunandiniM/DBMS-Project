@@ -1,17 +1,25 @@
 public class MechanicFreeSlot {
     public int startSlot;
     public int endSlot;
-    public int EMPID;
+    public String EMPID;
 
     public int week;
 
     public int day;
 
-    MechanicFreeSlot() {
+    public MechanicFreeSlot() {
         startSlot = -1;
         endSlot = -1;
-        EMPID = -1;
+        EMPID = "";
         week = -1;
         day = -1;
+    }
+
+    public MechanicFreeSlot(int startSlot, int endSlot, int week, int day, String EMPID) {
+        this.startSlot = startSlot;
+        this.endSlot = endSlot;
+        this.week = week;
+        this.day = day;
+        this.EMPID = EMPID;
     }
 }

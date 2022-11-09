@@ -1,6 +1,19 @@
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.sql.*;
+
+class Pair {
+    int x;
+    int y;
+
+    // Constructor
+    public Pair(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
 
 public class Mechanic {
     public void LandingPageMenu(LoginContext loginContext) {
@@ -209,12 +222,68 @@ public class Mechanic {
 
     }
 
-    public MechanicFreeSlot getFreeSlot(int duration) {
+    public ArrayList<MechanicFreeSlot> getFreeSlot(LoginContext loginContext, int duration) {
         MechanicFreeSlot result = new MechanicFreeSlot();
-        result.startSlot = 0;
-        result.endSlot = 5;
-        result.EMPID = 122;
+        ArrayList<String> mechanics = new ArrayList<String>();
+        ArrayList<MechanicFreeSlot> resultSlots = new ArrayList<>();
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
 
-        return result;
+            String sql = "SELECT EMPID FROM EMPLOYEE WHERE SCID = " + loginContext.SCID + " AND EROLE = 'MECHANIC'";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                mechanics.add(Integer.toString(rs.getInt(0)));
+            }
+        }catch (Exception e) {
+            System.out.println("Cannot query mechanics from the service center");
+        }
+
+        /*
+        1. For each mechanic, get the schedule from the SCHEDULE table
+        2. For each day and each week construct a list of busy slots -> and then convert it to free slots with a condition that any of the slots have
+        duration greater than the specified duration
+        3. Add it to a list of pairs which is the result.
+         */
+        // iterating over all the weeks
+
+        for(String empid : mechanics) {
+            ArrayList<Pair> schedule = new ArrayList<>();
+            for (int i = 1; i < 5; i++) {
+                for (int j = 1; j < 6; j++) {
+                    // make a sql query to find out the records
+                    // make an array list of Pairs
+                    resultSlots = getFreeSlots(schedule, duration, resultSlots, i, j, empid);
+                }
+
+                if (resultSlots.size() > 3) {
+                    break;
+                }
+            }
+        }
+
+        return resultSlots;
+    }
+
+    ArrayList<MechanicFreeSlot> getFreeSlots(ArrayList<Pair> schedule, int duration, ArrayList<MechanicFreeSlot> returnResult, int week, int day, String EMPID) {
+        for(int i = 0; i < schedule.size(); i++) {
+
+            if (i == schedule.size() - 1) {
+                Pair last = schedule.get(i);
+                if (12 - last.y >= duration) {
+                    returnResult.add(new MechanicFreeSlot(11, last.y, week, day, EMPID));
+                }
+            }
+
+            Pair pair1 = schedule.get(i);
+            Pair pair2 = schedule.get(i + 1);
+
+            if (pair2.x - pair1.y >= duration) {
+                returnResult.add(new MechanicFreeSlot(pair1.y, pair2.x, week, day, EMPID));
+            }
+        }
+
+        return returnResult;
     }
 }
