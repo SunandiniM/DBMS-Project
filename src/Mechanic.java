@@ -247,7 +247,7 @@ public class Mechanic {
             Statement stmt = dbConn.conn.createStatement();
             String sql = "INSERT INTO SWAP_REQUEST VALUES('" + SCID + "', '" + empid + "', '" + req_empid
                     + "', '" + day + "', '" + week + "', '" + start + "', '" + stop
-                    + "', '" + rday + "', '" + rweek + "', '" + rstart + "', '" + rstop +"')";
+                    + "', '" + rday + "', '" + rweek + "', '" + rstart + "', '" + rstop + "', '" + status +"')";
             stmt.executeUpdate(sql);
         } catch(Exception e) {
             System.out.println("Failed to insert swap request");
