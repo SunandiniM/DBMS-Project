@@ -107,41 +107,41 @@ VALUES(30003, 123450678, 22);
 INSERT INTO WORKSIN 
 VALUES(30003, 123405678, 22);
 
-INSERT INTO CUSTOMER(SCID, CID, FNAME, LNAME, USERNAME, ACC_STATUS, PROFILE_STATUS) 
-VALUES(30001, 10001, 'Peter', 'Parker', 'PeterParker', 0, 1);
+INSERT INTO CUSTOMER(SCID, FNAME, LNAME, USERNAME, ACC_STATUS, PROFILE_STATUS) 
+VALUES(30001, 'Peter', 'Parker', 'PeterParker', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30001, 10002, 'Diana', 'Prince', 'DianaPrince', 0, 1);
+VALUES(30001, 'Diana', 'Prince', 'DianaPrince', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30002, 10053, 'Billy', 'Batson', 'BillyBatson', 0, 1);
+VALUES(30002, 'Billy', 'Batson', 'BillyBatson', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30002, 10010, 'Bruce', 'Wayne', 'BruceWayne', 0, 1);
+VALUES(30002, 'Wayne', 'BruceWayne', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30002, 10001, 'Steve', 'Rogers', 'SteveRogers', 0, 1);
+VALUES(30002, 'Steve', 'Rogers', 'SteveRogers', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30002, 10035, 'Happy', 'Hogan', 'HappyHogan', 0, 1);
+VALUES(30002, 'Happy', 'Hogan', 'HappyHogan', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30003, 10002, 'Tony', 'Stark', 'TonyStark',0, 1);
+VALUES(30003, 'Tony', 'Stark', 'TonyStark',0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30003, 10003, 'Natasha', 'Romanoff', 'NatashaRomanoff', 0, 1);
+VALUES(30003, 'Natasha', 'Romanoff', 'NatashaRomanoff', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30003, 10011, 'Harvey', 'Bullock', 'HarveyBullock', 0, 1);
+VALUES(30003, 'Harvey', 'Bullock', 'HarveyBullock', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30003, 10062, 'Sam', 'Wilson', 'SamWilson', 0, 1);
+VALUES(30003, 'Sam', 'Wilson', 'SamWilson', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30003, 10501, 'Wanda', 'Maximoff', 'WandaMaximoff', 0, 1);
+VALUES(30003, 'Wanda', 'Maximoff', 'WandaMaximoff', 0, 1);
 
 INSERT INTO CUSTOMER 
-VALUES(30003, 10010, 'Virginia', 'Potts', 'VirginiaPotts', 0, 1);
+VALUES(30003, 'Virginia', 'Potts', 'VirginiaPotts', 0, 1);
 
 INSERT INTO VEHICLE(VIN_NO, YEAR, MFG, MILEAGE, SCHEDULE) 
 VALUES('4Y1BL658', 2007, 'Toyota', 53000, 'B');
