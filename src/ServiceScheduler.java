@@ -410,13 +410,13 @@ public class ServiceScheduler {
     }
 
     public void bookSlot(LoginContext loginContext, SelectedSlots startSlots, SelectedSlots endSlots, int optionVal, int invoiceId, int numDays) {
-        int startW = startSlots.selectedSlots.get(optionVal).get(0);
-        int startD = startSlots.selectedSlots.get(optionVal).get(1);
-        int startS = startSlots.selectedSlots.get(optionVal).get(2);
+        int startW = startSlots.selectedSlots.get(optionVal - 1).get(0);
+        int startD = startSlots.selectedSlots.get(optionVal - 1).get(1);
+        int startS = startSlots.selectedSlots.get(optionVal - 1).get(2);
 
-        int endW = endSlots.selectedSlots.get(optionVal).get(0);
-        int endD = endSlots.selectedSlots.get(optionVal).get(1);
-        int endS = endSlots.selectedSlots.get(optionVal).get(2);
+        int endW = endSlots.selectedSlots.get(optionVal - 1).get(0);
+        int endD = endSlots.selectedSlots.get(optionVal - 1).get(1);
+        int endS = endSlots.selectedSlots.get(optionVal - 1).get(2);
         while (true) {
             int endVal = 11;
             if (startW == endW && startD == endD) {
