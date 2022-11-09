@@ -171,7 +171,7 @@ public class ServiceScheduler {
             int dayVal = slots.get(i).get(1);
             int currSlotVal = slots.get(i).get(2);
             currSlotVal += 1;
-            if (currSlotVal > 11) {
+            if (currSlotVal > 11 || (11 - currSlotVal) < duration) {
                 currSlotVal = 1;
                 dayVal += 1;
                 if (dayVal > numDays) {
