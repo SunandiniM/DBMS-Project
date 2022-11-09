@@ -32,7 +32,6 @@ public class Cart {
             ids = ids.concat(", " + s);
         }
         ids = ids.concat(")");
-        System.out.println(ids);
         return ids;
     }
 
