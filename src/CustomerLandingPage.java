@@ -24,8 +24,11 @@ public class CustomerLandingPage {
                 break;
             case 3:
                 InvoiceHandler(loginContext);
+                AskCustomer(loginContext);
+                break;
             case 4:
-                // logout code
+                Login login = new Login();
+                login.AskLogout();
             default:
                 return;
         }
