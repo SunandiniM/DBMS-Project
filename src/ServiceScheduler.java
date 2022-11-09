@@ -78,22 +78,54 @@ public class ServiceScheduler {
     }
 
     public void ChooseSlots(LoginContext loginContext, Cart cart) {
-        Mechanic mechanic = new Mechanic();
-//        ArrayList<MechanicFreeSlot> freeSlots = mechanic.getFreeSlot(loginContext, cart.getTotalDuration());
-
-  /*      Scanner in = new Scanner(System.in);
-        for (int i = 0; i < freeSlots.size(); i++) {
-            System.out.println("Press " + i + " to select slot #" + i);
-            MechanicFreeSlot x = freeSlots.get(i);
-            System.out.println("SLOT : WEEK " + x.week + " DAY " + x.day + "START SLOT" + x.startSlot + " END SLOT " + x.endSlot);
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "select * from HOURLY_EMPLOYEE_SCHEDULE H1 where H1.END_SLOT in (select MAX(H2.END_SLOT) " +
+                    "from HOURLY_EMPLOYEE_SCHEDULE H2 where H2.SCID=" + loginContext.SCID + " and H2.EMPID=H1.EMPID and DAY in " +
+                "(select MAX(H3.DAY) from HOURLY_EMPLOYEE_SCHEDULE H3 where H3.SCID=" + loginContext.SCID + " and H3.EMPID=H1.EMPID and DAY in " +
+                    "(select MAX(H4.WEEK) from HOURLY_EMPLOYEE_SCHEDULE H4 where H4.SCID=" + loginContext.SCID + " and H4.EMPID=H1.EMPID))) and " +
+                    "H1.EMPID in (select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EMPID=H1.EMPID and E.EROLE='MECHANIC')";
+            System.out.println(sql);
+            ResultSet rs = stmt.executeQuery(sql);
+            int i = 1;
+            System.out.println("Time Slots");
+            List<String> empIdList = new ArrayList<>();
+            List<List<Integer>> currSlotDetails = new ArrayList<>();
+            while (rs.next()) {
+                empIdList.add(rs.getString("EMPID"));
+                currSlotDetails.add(Arrays.asList(rs.getInt("WEEK"), rs.getInt("DAY"), rs.getInt("END_SLOT")));
+                String temp = rs.getString("SCID") + " " + rs.getString("EMPID") + " " + rs.getString("WEEK") + " " + rs.getString("DAY") + " " + rs.getString("END_SLOT");
+                System.out.println("" + i + ". " + temp);
+                i++;
+            }
+            sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                empIdList.add(rs.getString("EMPID"));
+                currSlotDetails.add(Arrays.asList(1, 1, 1));
+                String temp = loginContext.SCID + " " + rs.getString("EMPID") + " 1 1 1";
+                System.out.println("" + i + ". " + temp);
+                i++;
+            }
+        } catch(Exception e) {
+            System.out.println("Failed to fetch slots");
+            System.out.println(e);
         }
 
-        int slotNumber = in.nextInt();
-        SubmitOrder(loginContext, cart, freeSlots.get(slotNumber));
-
-   */
-        MechanicFreeSlot sample = new MechanicFreeSlot();
-        SubmitOrder(loginContext, cart, sample);
+//        Mechanic mechanic = new Mechanic();
+//        ArrayList<MechanicFreeSlot> freeSlots = mechanic.getFreeSlot(loginContext, cart.getTotalDuration());
+//
+//        Scanner in = new Scanner(System.in);
+//        for (int i = 0; i < freeSlots.size(); i++) {
+//            System.out.println("Press " + i + " to select slot #" + i);
+//            MechanicFreeSlot x = freeSlots.get(i);
+//            System.out.println("SLOT : WEEK " + x.week + " DAY " + x.day + "START SLOT" + x.startSlot + " END SLOT " + x.endSlot);
+//        }
+//
+//        int slotNumber = in.nextInt();
+//        SubmitOrder(loginContext, cart, freeSlots.get(slotNumber));
     }
 
     public Cart ScheduleMaintainance(String vin, Cart cart, LoginContext loginContext) {
