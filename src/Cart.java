@@ -21,13 +21,15 @@ public class Cart {
 
     public String getServicesList() {
         String ids = "(";
-        String currId = "113";
-        if (Maintainance.equals("B")) {
-            currId = "114";
-        } else if (Maintainance.equals("C")) {
-            currId = "115";
+        if (Maintainance.length() != 0) {
+            String currId = "113";
+            if (Maintainance.equals("B")) {
+                currId = "114";
+            } else if (Maintainance.equals("C")) {
+                currId = "115";
+            }
+            ids = ids.concat(currId);
         }
-        ids = ids.concat(currId);
         for (String s: RepairServiceList) {
             ids = ids.concat(", " + s);
         }
