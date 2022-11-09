@@ -233,15 +233,17 @@ public class Manager {
                                 int dur = in.nextInt();
                                 try {
                                     sql = "INSERT INTO OFFERS VALUES ('" + rs.getString("SID") + "', '" + loginContext.SCID + "', '" + manf + "', '" + dur + "', '" + price + "')";
+                                    System.out.println("SQL Query");
+                                    System.out.println(sql);
                                     stmt.executeUpdate(sql);
-                                    System.out.println("Successfully added maintenance service price for service " + rs.getString("SID"));
+                                    System.out.println("Successfully added repair service price for service " + rs.getString("SID"));
                                 } catch (Exception e) {
-                                    System.out.println("Failed to setup maintenance service price for schedule " + rs.getString("SID"));
+                                    System.out.println("Failed to setup repair service price for schedule " + rs.getString("SID"));
                                     System.out.println(e);
                                 }
                             }
                         } catch(Exception e) {
-                            System.out.println("Failed to setup maintenance service price");
+                            System.out.println("Failed to setup repair service price");
                             System.out.println(e);
                         }
                         in = new Scanner(System.in);
