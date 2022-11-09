@@ -87,7 +87,6 @@ public class ServiceScheduler {
                 "(select MAX(H3.DAY) from HOURLY_EMPLOYEE_SCHEDULE H3 where H3.SCID=" + loginContext.SCID + " and H3.EMPID=H1.EMPID and DAY in " +
                     "(select MAX(H4.WEEK) from HOURLY_EMPLOYEE_SCHEDULE H4 where H4.SCID=" + loginContext.SCID + " and H4.EMPID=H1.EMPID))) and " +
                     "H1.EMPID in (select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EMPID=H1.EMPID and E.EROLE='MECHANIC')";
-            System.out.println(sql);
             ResultSet rs = stmt.executeQuery(sql);
 //            int i = 1;
 //            System.out.println("Time Slots");
@@ -109,15 +108,28 @@ public class ServiceScheduler {
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
-                currSlotDetails.add(Arrays.asList(0, 0, 0));
+                currSlotDetails.add(Arrays.asList(1, 1, 0));
 //                String temp = loginContext.SCID + " " + rs.getString("EMPID") + " 0 0 0";
 //                System.out.println("" + i + ". " + temp);
 //                i++;
             }
+            int numDays = 5;
+            try {
+                sql = "select OPEN_SATURDAY from SERVICE_CENTER where SCID=" + loginContext.SCID;
+                rs = stmt.executeQuery(sql);
+
+                while (rs.next()) {
+                    if (rs.getInt("OPEN_SATURDAY") == 1) {
+                        numDays += 1;
+                    }
+                }
+            } catch(Exception e) {
+                numDays = 5;
+            }
             int duration = cart.getTotalDuration();
-            System.out.println("Duration Value: " + duration);
-            SelectedSlots nextStartSlots = getStartSlots(empIdList, currSlotDetails, 5, duration);
-            SelectedSlots nextEndSlots = getEndSlots(nextStartSlots, 5, duration);
+            System.out.println("Total duration Value: " + duration);
+            SelectedSlots nextStartSlots = getStartSlots(empIdList, currSlotDetails, numDays, duration);
+            SelectedSlots nextEndSlots = getEndSlots(nextStartSlots, numDays, duration);
             System.out.println("Enter the time slot number of your choice");
             for (int i=0;i<nextEndSlots.selectedIds.size();i++) {
                 String timeStr = nextStartSlots.selectedSlots.get(i).get(0) + ", " + nextStartSlots.selectedSlots.get(i).get(1) + ", " + nextStartSlots.selectedSlots.get(i).get(2);
@@ -129,24 +141,12 @@ public class ServiceScheduler {
             Scanner in = new Scanner(System.in);
             int option = in.nextInt();
             System.out.println("Selected timeslot is " + option);
-
+            SubmitOrder(loginContext, cart, nextStartSlots, nextEndSlots, option, numDays);
+            System.out.println("Booked Slot and Invoice generated");
         } catch(Exception e) {
             System.out.println("Failed to fetch slots");
             System.out.println(e);
         }
-
-//        Mechanic mechanic = new Mechanic();
-//        ArrayList<MechanicFreeSlot> freeSlots = mechanic.getFreeSlot(loginContext, cart.getTotalDuration());
-//
-//        Scanner in = new Scanner(System.in);
-//        for (int i = 0; i < freeSlots.size(); i++) {
-//            System.out.println("Press " + i + " to select slot #" + i);
-//            MechanicFreeSlot x = freeSlots.get(i);
-//            System.out.println("SLOT : WEEK " + x.week + " DAY " + x.day + "START SLOT" + x.startSlot + " END SLOT " + x.endSlot);
-//        }
-//
-//        int slotNumber = in.nextInt();
-//        SubmitOrder(loginContext, cart, freeSlots.get(slotNumber));
     }
 
     public SelectedSlots getStartSlots(List<String> empIds, List<List<Integer>> slots, int numDays, int duration) {
@@ -201,8 +201,8 @@ public class ServiceScheduler {
                         endWeek += 1;
                     }
                 } else {
-                    currDurration = 0;
                     endSlot = endSlot + currDurration;
+                    currDurration = 0;
                 }
             }
             selectedIds.add(startSlots.selectedIds.get(i));
@@ -265,7 +265,6 @@ public class ServiceScheduler {
                 System.out.println(e);
             }
         }
-
         cart.vinNumber = vin;
         return cart;
     }
@@ -357,7 +356,7 @@ public class ServiceScheduler {
         }
     }
 
-    public void SubmitOrder(LoginContext loginContext, Cart cart, MechanicFreeSlot mechanicFreeSlot) {
+    public void SubmitOrder(LoginContext loginContext, Cart cart, SelectedSlots startSlots, SelectedSlots endSlots, int optionVal, int numDays) {
         // assumes the cart is filled and has th
         int cost = cart.getTotalCost();
         int invoiceID = -1;
@@ -366,7 +365,6 @@ public class ServiceScheduler {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
-
             String sql = "SELECT COUNT(*) AS S FROM INVOICE";
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -378,7 +376,6 @@ public class ServiceScheduler {
         }catch (Exception e) {
             System.out.println("Failed to add in INVOICE " + e);
         }
-
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             try{
@@ -390,11 +387,8 @@ public class ServiceScheduler {
                     System.out.println(sql);
                     stmt.executeUpdate(sql);
                 }
-
                 if (!cart.Maintainance.equals("")) {
-
                     int serviceID = 0;
-
                     if (cart.Maintainance.equals("A")){
                         serviceID = 113;
                     } else if (cart.Maintainance.equals("B")) {
@@ -402,37 +396,54 @@ public class ServiceScheduler {
                     } else  {
                         serviceID = 115;
                     }
-
-
-
                         Statement stmt = dbConn.createConnection().createStatement();
-                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID +")";
-                        System.out.println(sql);
+                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + cart.vinNumber + "')";
                         stmt.executeUpdate(sql);
                 }
-
             }catch (Exception e) {
                 System.out.println("Failed to put in service event " + e);
             }
         }catch (Exception e) {
             System.out.println("Trying to update service event " + e);
         }
+        bookSlot(loginContext, startSlots, endSlots, optionVal, invoiceID, numDays);
+    }
 
-        // place this statement where the user will select it
-//        ArrayList<MechanicFreeSlot> mechanicFreeSlot = (new Mechanic().getFreeSlot(loginContext, cart.getTotalDuration()));
+    public void bookSlot(LoginContext loginContext, SelectedSlots startSlots, SelectedSlots endSlots, int optionVal, int invoiceId, int numDays) {
+        int startW = startSlots.selectedSlots.get(optionVal - 1).get(0);
+        int startD = startSlots.selectedSlots.get(optionVal - 1).get(1);
+        int startS = startSlots.selectedSlots.get(optionVal - 1).get(2);
 
-        // show the user and get the slots
-
-        /*try {
-            DBConnection dbConn = DBConnection.getDBConnection();
-            dbConn.createConnection();
-            Statement stmt = dbConn.conn.createStatement();
-            String sql = "INSERT INTO HOURLY_EMPLOYEE_SCHEDULE VALUES ("+ loginContext.SCID + "," + invoiceID + "," +
-                    mechanicFreeSlot.EMPID + ", " + mechanicFreeSlot.week + "," + mechanicFreeSlot.day + "," + mechanicFreeSlot.startSlot + "," + mechanicFreeSlot.endSlot + ")";
-            System.out.println(sql);
-            stmt.executeUpdate(sql);
-        }catch (Exception e) {
-            System.out.println("Failed to add in HOURLY_EMPLOYEE_SCHEDULE" + e);
-        }*/
+        int endW = endSlots.selectedSlots.get(optionVal - 1).get(0);
+        int endD = endSlots.selectedSlots.get(optionVal - 1).get(1);
+        int endS = endSlots.selectedSlots.get(optionVal - 1).get(2);
+        while (true) {
+            int endVal = 11;
+            if (startW == endW && startD == endD) {
+                endVal = endS;
+            }
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql = "INSERT INTO HOURLY_EMPLOYEE_SCHEDULE(SCID, ORDER_ID, EMPID, WEEK, DAY, START_SLOT, END_SLOT) VALUES ("
+                        + loginContext.SCID + "," + invoiceId + ", " + startSlots.selectedIds.get(optionVal) + ", "
+                        + startW + ", " + startD + ", " + startS + ", " + endVal + ")";
+                stmt.executeUpdate(sql);
+            } catch(Exception e) {
+                System.out.println("Failed to book slot");
+                System.out.println(e);
+                return;
+            }
+            if (startW == endW && startD == endD) {
+                break;
+            }
+            startS = 1;
+            startD += 1;
+            if (startD > numDays) {
+                startD = 1;
+                startW += 1;
+            }
+        }
     }
 }
