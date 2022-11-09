@@ -68,11 +68,8 @@ public class Mechanic {
                 timeStr = rs.getString("end_week") + ", " + rs.getString("end_day") + ", " + rs.getString("end_slot");
                 System.out.println("End Time Slot(Week, Day, Slot): " + timeStr);
             }
-
-
         } catch(Exception e) {
             System.out.println("Failed to print the schedule of the mechanic" + e);
-
         }
     }
 
@@ -81,36 +78,47 @@ public class Mechanic {
 
         System.out.println("Enter the week you want a time off");
         int week = in.nextInt();
-        in.nextLine();
-
+        in = new Scanner(System.in);
         System.out.println("Enter the day you want the time off");
         int day = in.nextInt();
-        in.nextLine();
-
+        in = new Scanner(System.in);
         System.out.println("Enter the slot start of time off");
         int startSlot = in.nextInt();
-        in.nextLine();
-
+        in = new Scanner(System.in);
         System.out.println("Enter the end slot id of the time off");
         int endSlot = in.nextInt();
-        in.nextLine();
-
-        System.out.println("Press 1 to make the selection or any other key to go back");
+        in = new Scanner(System.in);
+        System.out.println("Press 1 to apply for time off and 2 to go back");
         int option = in.nextInt();
         if (option == 1) {
-            // JDBC Call
             try {
                 DBConnection dbConn = DBConnection.getDBConnection();
-                Connection conn = dbConn.createConnection();
                 Statement stmt = dbConn.conn.createStatement();
-                String sql1 = "INSERT INTO TIMEOFF_REQUEST VALUES( " + loginContext.SCID + ", " + loginContext.ID + ", " + day + ", " + week + ", " + startSlot + ", " + endSlot + ", " + 0 + ")";
-//                System.out.println(sql1);
-                stmt.executeUpdate(sql1);
+                String sql = "SELECT * from HOURLY_EMPLOYEE_SCHEDULE where SCID=" + loginContext.SCID + " and EMPID=" + loginContext.ID +
+                        " and WEEK=" + week + " and DAY=" + day;
+                ResultSet rs = stmt.executeQuery(sql);
+                int status = 1;
+                while(rs.next()) {
+                    if (rs.getInt("START_SLOT") <= startSlot && startSlot <= rs.getInt("END_SLOT") ) {
+                        status = 0;
+                    }
+                    if (rs.getInt("START_SLOT") <= endSlot && endSlot <= rs.getInt("END_SLOT") ) {
+                        status = 0;
+                    }
+
+                }
+                sql = "INSERT INTO TIMEOFF_REQUEST VALUES( " + loginContext.SCID + ", " + loginContext.ID + ", " + day + ", " + week + ", " + startSlot + ", " + endSlot + ", " + status + ")";
+                stmt.executeUpdate(sql);
+                if (status == 0) {
+                    System.out.println("Time off request rejected");
+                } else {
+                    sql = "INSERT INTO HOURLY_EMPLOYEE_SCHEDULE VALUES(" + loginContext.SCID + ", -1, " + loginContext.ID + ", " + week + ", " + day + ", " + startSlot + ", " + endSlot + ")";
+                    stmt.executeUpdate(sql);
+                    System.out.println("Time off request accepted");
+                }
             } catch(Exception e) {
-                System.out.println("Met with this exception while committing to the database " + e);
+                System.out.println("Failed to apply for TimeOff" + e);
             }
-        }else{
-            return;
         }
     }
 
