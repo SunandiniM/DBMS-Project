@@ -2,7 +2,7 @@ import java.util.Scanner;
 import java.sql.*;
 
 public class AdminLandingPage {
-    public void AskAdmin() throws SQLException {
+    public void AskAdmin() {
         System.out.println("Press 1 for System Setup");
         System.out.println("Press 2 to Add new store");
         System.out.println("Press 3 to Add new service");

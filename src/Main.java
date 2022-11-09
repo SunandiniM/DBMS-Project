@@ -2,7 +2,7 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) {
         System.out.println("Press 1 to Log In");
         System.out.println("Press 2 to Exit");
 
