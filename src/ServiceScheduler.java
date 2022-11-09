@@ -174,22 +174,6 @@ public class ServiceScheduler {
             System.out.println("Failed to fetch repair schedule categories");
             System.out.println(e);
         }
-        System.out.println(cart.toString());
-        System.out.println(cart.Maintainance);
-        System.out.println(cart.MaintenanceCost);
-        System.out.println(cart.MaintenanceDuration);
-        for (String str : cart.RepairServiceList)
-        {
-            System.out.println(str);
-        }
-        for (int str : cart.RepairServiceCostList)
-        {
-            System.out.println(str);
-        }
-        for (int str : cart.RepairServiceDurationList)
-        {
-            System.out.println(str);
-        }
         return cart;
     }
 
