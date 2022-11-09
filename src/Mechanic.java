@@ -222,6 +222,10 @@ public class Mechanic {
 
     }
 
+    public ArrayList<MechanicFreeSlot> getSlots(LoginContext loginContext, Cart cart) {
+        return getFreeSlot(loginContext, cart.getTotalDuration());
+    }
+
     public ArrayList<MechanicFreeSlot> getFreeSlot(LoginContext loginContext, int duration) {
         MechanicFreeSlot result = new MechanicFreeSlot();
         ArrayList<String> mechanics = new ArrayList<String>();
