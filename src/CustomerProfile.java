@@ -73,6 +73,26 @@ public class CustomerProfile {
             }catch (Exception e) {
                 System.out.println("Failed to delete vehicle "+e);
             }
+
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql = "SELECT COUNT(*) FROM OWNS WHERE CID = " + loginContext.ID + " AND SCID = " + loginContext.SCID;
+                ResultSet rs = stmt.executeQuery(sql);
+                int count = 0;
+                while (rs.next()) {
+                    count = rs.getInt(1);
+                }
+
+                if (count == 0) {
+                    sql = "UPDATE CUSTOMER SET PROFILE_STATUS = 0 WHERE CID = " + loginContext.ID + " AND SCID = " + loginContext.SCID;
+                    Statement stmt2 = dbConn.conn.createStatement();
+                    stmt2.executeUpdate(sql);
+                }
+            }catch (Exception e) {
+                System.out.println(e);
+            }
         }else {
             return;
         }

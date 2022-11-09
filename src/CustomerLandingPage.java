@@ -75,6 +75,26 @@ public class CustomerLandingPage {
         }catch (Exception e) {
             System.out.println("Failed to add in INVOICE " + e);
         }
+
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "SELECT COUNT(*) FROM INVOICE WHERE STATUS = 0 AND CID = " + loginContext.ID + " AND SCID = " + loginContext.SCID;
+            ResultSet rs = stmt.executeQuery(sql);
+            int count = 0;
+            while (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+            if (count == 0) {
+                sql = "UPDATE CUSTOMER SET ACC_STATUS = 1 WHERE CID = " + loginContext.ID + " AND SCID = " + loginContext.SCID;
+                Statement stmt2 = dbConn.conn.createStatement();
+                stmt2.executeUpdate(sql);
+            }
+        }catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public void ShowInvoices(LoginContext loginContext) {
