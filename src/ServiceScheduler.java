@@ -100,7 +100,12 @@ public class ServiceScheduler {
 //                System.out.println("" + i + ". " + temp);
 //                i++;
             }
-            sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
+            if (empIdList.size() > 0) {
+                sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
+            } else {
+                sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC'";
+            }
+
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
@@ -110,6 +115,7 @@ public class ServiceScheduler {
 //                i++;
             }
             int duration = cart.getTotalDuration();
+            System.out.println("Duration Value: " + duration);
             SelectedSlots nextStartSlots = getStartSlots(empIdList, currSlotDetails, 5, duration);
             SelectedSlots nextEndSlots = getEndSlots(nextStartSlots, 5, duration);
             System.out.println("Enter the time slot number of your choice");
@@ -184,9 +190,10 @@ public class ServiceScheduler {
             int endWeek = startSlots.selectedSlots.get(i).get(0);
             int endDay = startSlots.selectedSlots.get(i).get(1);
             int endSlot = startSlots.selectedSlots.get(i).get(2);
-            while (duration != 0) {
-                if (duration > (11 - endSlot)) {
-                    duration -= (11 - endSlot);
+            int currDurration = duration;
+            while (currDurration != 0) {
+                if (currDurration > (11 - endSlot)) {
+                    currDurration -= (11 - endSlot);
                     endSlot = 1;
                     endDay += 1;
                     if (endDay > numDays) {
@@ -194,8 +201,8 @@ public class ServiceScheduler {
                         endWeek += 1;
                     }
                 } else {
-                    duration = 0;
-                    endSlot = endSlot + duration;
+                    currDurration = 0;
+                    endSlot = endSlot + currDurration;
                 }
             }
             selectedIds.add(startSlots.selectedIds.get(i));
