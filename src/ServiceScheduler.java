@@ -65,7 +65,7 @@ public class ServiceScheduler {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql = "select SCHEDULE from VEHICLE where VIN_NO=" + vin;
+            String sql = "select SCHEDULE from VEHICLE where VIN_NO='" + vin + "'";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs != null && rs.isBeforeFirst()) {
                 while (rs.next()) {
