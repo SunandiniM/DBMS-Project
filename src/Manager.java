@@ -55,7 +55,7 @@ public class Manager {
                     SetupOperationalHours();
                     break;
                 case 3:
-                    SetupRepairServicePrices();
+                    SetupServicePrices();
                     break;
                 case 4:
                     return;
@@ -120,7 +120,7 @@ public class Manager {
     }
 
     public void SetupServicePrices() {
-        System.out.println("Press 1 Setup Maintainance Service prices");
+        System.out.println("Press 1 Setup Maintenance Service prices");
         System.out.println("Press 2 Setup Repair Service prices");
         System.out.println("Press 3 to go back");
 
@@ -138,18 +138,66 @@ public class Manager {
     }
 
     public void SetupMaintainanceServicePrices() {
-        Scanner in = new Scanner(System.in);
-        System.out.println("Enter Schedule A price");
-        double aPrice = in.nextDouble();
-        in.nextLine();
-        System.out.println("Enter Schedule B price");
-        double bPrice = in.nextDouble();
-        in.nextLine();
-        System.out.println("Enter Schedule C price");
-        double cPrice = in.nextDouble();
-        in.nextLine();
-
-        // UPDATE JDBC
+        while (true) {
+            Scanner in = new Scanner(System.in);
+            System.out.println("1. Setup Prices");
+            System.out.println("2. Go Back");
+            int option = in.nextInt();
+            switch (option) {
+                case 1:
+                    while (true) {
+                        in = new Scanner(System.in);
+                        System.out.println("Enter Manufacturer Name");
+                        String manf = in.nextLine();
+                        in = new Scanner(System.in);
+                        System.out.println("Enter Schedule A price");
+                        int aPrice = in.nextInt();
+                        in = new Scanner(System.in);
+                        System.out.println("Enter Schedule A duration");
+                        int aDur = in.nextInt();
+                        in = new Scanner(System.in);
+                        System.out.println("Enter Schedule B price");
+                        int bPrice = in.nextInt();
+                        in = new Scanner(System.in);
+                        System.out.println("Enter Schedule A duration");
+                        int bDur = in.nextInt();
+                        in = new Scanner(System.in);
+                        System.out.println("Enter Schedule C price");
+                        int cPrice = in.nextInt();
+                        in = new Scanner(System.in);
+                        System.out.println("Enter Schedule A duration");
+                        int cDur = in.nextInt();
+                        try {
+                            DBConnection dbConn = DBConnection.getDBConnection();
+                            dbConn.createConnection();
+                            Statement stmt = dbConn.conn.createStatement();
+                            for (int i=113; i<116;i++) {
+                                try {
+                                    String sql = "INSERT INTO OFFERS VALUES ('" + i + "', '" + loginContext.SCID + "', '" + manf + "', '" + aDur + "', '" + aPrice + "')";
+                                    stmt.executeUpdate(sql);
+                                    System.out.println("Successfully added maintenance service price for schedule " + i);
+                                } catch (Exception e) {
+                                    System.out.println("Failed to setup maintenance service price for schedule " + i);
+                                    System.out.println(e);
+                                }
+                            }
+                        } catch(Exception e) {
+                            System.out.println("Failed to setup maintenance service price");
+                            System.out.println(e);
+                        }
+                        in = new Scanner(System.in);
+                        System.out.println("Have more manufacturers?\n1. Yes\n2. No");
+                        if (in.nextInt() == 2) {
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    return;
+                default:
+                    break;
+            }
+        }
     }
 
     public void SetupRepairServicePrices() {
