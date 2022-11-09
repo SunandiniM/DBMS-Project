@@ -11,7 +11,7 @@ public class Main {
         while (option != 2) {
             in = new Scanner(System.in);
             Login loginObj = new Login();
-            LoginContext loginContext = loginObj.AskLogin(in);
+            LoginContext loginContext = loginObj.AskLogin();
             if (loginContext != null) {
                 if (loginContext.role.equals("ADMIN")) {
                     AdminLandingPage adminLandingPageObj = new AdminLandingPage();

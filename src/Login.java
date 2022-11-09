@@ -3,9 +3,9 @@ import java.util.Scanner;
 
 public class Login {
     // return the role in string
-    public LoginContext AskLogin(Scanner in) {
+    public LoginContext AskLogin() {
         LoginContext loginContext = new LoginContext();
-        in = new Scanner(System.in);
+        Scanner in = new Scanner(System.in);
         System.out.println("Enter your username:");
         String username = in.nextLine();
         in = new Scanner(System.in);
@@ -14,6 +14,7 @@ public class Login {
         in = new Scanner(System.in);
         System.out.println("Enter your service center id:");
         int centerId = in.nextInt();
+        in.nextLine();
         if (username.equals("admin") && password.equals("admin")) {
             loginContext.role = "ADMIN";
             return loginContext;
@@ -63,5 +64,6 @@ public class Login {
 
     public void AskLogout() {
         System.out.println("Do you want to logout?");
+        AskLogin();
     }
 }
