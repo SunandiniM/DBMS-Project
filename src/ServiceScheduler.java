@@ -178,7 +178,6 @@ public class ServiceScheduler {
 
     // IMPLEMENT THIS ONCE JDBC IS IMPLEMENTED
     public Cart getServicesOfCategory(String category, String vin, Cart cart, LoginContext loginContext) {
-//        select s.SNAME as SNAME from SERVICE S, REPAIR_SERVICE r, OFFERS o, VEHICLE v where v.VIN_NO='88TSM888' and v.MFG=o.MFG and o.scid=30003 and o.SID=s.SID and r.CATEGORY='Tire Services' and r.sid=s.sid;
         Scanner in = new Scanner(System.in);
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
@@ -206,22 +205,6 @@ public class ServiceScheduler {
         } catch(Exception e) {
             System.out.println("Failed to fetch repair schedule categories");
             System.out.println(e);
-        }
-        System.out.println(cart.toString());
-        System.out.println(cart.Maintainance);
-        System.out.println(cart.MaintenanceCost);
-        System.out.println(cart.MaintenanceDuration);
-        for (String str : cart.RepairServiceList)
-        {
-            System.out.println(str);
-        }
-        for (int str : cart.RepairServiceCostList)
-        {
-            System.out.println(str);
-        }
-        for (int str : cart.RepairServiceDurationList)
-        {
-            System.out.println(str);
         }
         return cart;
     }
