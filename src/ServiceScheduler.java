@@ -1,3 +1,5 @@
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class ServiceScheduler {
@@ -64,8 +66,6 @@ public class ServiceScheduler {
             return null;
         }
 
-        //
-
         return cart;
     }
 
@@ -73,6 +73,35 @@ public class ServiceScheduler {
     public Cart getServicesOfCategory(String category, Cart cart) {
         // call JDBC to get all the repair services
 
+
         return cart;
+    }
+
+    public void SubmitOrder(LoginContext loginContext, Cart cart) {
+        // assumes the cart is filled and has th
+        int cost = cart.giveTotalCost();
+        int invoiceID = -1;
+        // First create the invoice -> generate the id, put cost as bill, status 0 -> unpaid
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+
+            String sql = "SELECT COUNT(*) AS S FROM INVOICE";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                invoiceID = rs.getInt("S");
+            }
+            invoiceID += 1;
+            sql = "INSERT INTO INVOICE(ORDERID, CID, BILL, STATUS) VALUES (" + invoiceID + "," + loginContext.ID + ", " + cost + ", 0)";
+            stmt.executeUpdate(sql);
+            System.out.println("Successfully added a new customer profile");
+        }catch (Exception e) {
+            System.out.println("Failed to add in OWNED_BY" + e);
+        }
+
+
+
+
     }
 }
