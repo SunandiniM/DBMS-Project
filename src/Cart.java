@@ -31,7 +31,12 @@ public class Cart {
             ids = ids.concat(currId);
         }
         for (String s: RepairServiceList) {
-            ids = ids.concat(", " + s);
+            if (ids.length() != 1) {
+                ids = ids.concat(", " + s);
+            } else {
+
+            }
+            ids = ids.concat(s);
         }
         ids = ids.concat(")");
         return ids;
