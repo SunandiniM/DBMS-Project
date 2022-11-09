@@ -190,9 +190,11 @@ public class ServiceScheduler {
             System.out.println("Enter your choice from below list");
             List<List<String>> services = new ArrayList<>();
             while (rs.next()) {
-                System.out.println("" + i + ". " + rs.getString("SNAME"));
-                services.add(Arrays.asList(rs.getString("SID"), rs.getString("PRICE"), rs.getString("DURATION")));
-                i++;
+                if (!cart.RepairServiceList.contains(rs.getString("SID"))) {
+                    System.out.println("" + i + ". " + rs.getString("SNAME"));
+                    services.add(Arrays.asList(rs.getString("SID"), rs.getString("PRICE"), rs.getString("DURATION")));
+                    i++;
+                }
             }
             System.out.println("" + i + ". Go Back");
             int option = in.nextInt();
