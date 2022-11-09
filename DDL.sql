@@ -285,10 +285,12 @@ declare
     max_salary number;
     pay number;
 begin
-    SELECT MIN_WAGE INTO min_salary FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
+    SELECT MIN_WAGE INTO min_salary, EROLE INTO emp_role FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
     SELECT MAX_WAGE INTO max_salary FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
 
-    if :new.PAY > max_salary OR :new.PAY < min_salary then
+    if emp_role='MECHANIC' AND :new.PAY > max_salary then
+        raise_application_error(-20000, 'Salary not in correct range');
+    if emp_role='MECHANIC' AND :new.PAY < min_salary then
         raise_application_error(-20000, 'Salary not in correct range');
     end if;
 end checkMaxAndMinSalaries;
