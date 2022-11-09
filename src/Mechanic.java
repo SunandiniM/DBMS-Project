@@ -154,6 +154,8 @@ public class Mechanic {
         int option = in.nextInt();
         if (option == 1) {
             try {
+                int selfOrderId = 0;
+                int reqOrderId = 0;
                 DBConnection dbConn = DBConnection.getDBConnection();
                 String sql = "select ORDER_ID,  week, day, start_slot, end_slot from HOURLY_EMPLOYEE_SCHEDULE" +
                         " where ORDER_ID<>-1 and EMPID=" + loginContext.ID + " and SCID=" + loginContext.SCID + " order by ORDER_ID";
@@ -164,6 +166,7 @@ public class Mechanic {
                     if (rs.getInt("start_week") == week && rs.getInt("start_day") == day
                             && rs.getInt("start_slot") == start_slot && rs.getInt("end_slot") == end_slot) {
                         selfSlot = true;
+                        selfOrderId = rs.getInt("ORDER_ID");
                         break;
                     }
                 }
@@ -176,6 +179,7 @@ public class Mechanic {
                     if (rs.getInt("start_week") == rweek && rs.getInt("start_day") == rday
                             && rs.getInt("start_slot") == rstart_slot && rs.getInt("end_slot") == rend_slot) {
                         reqSlot = true;
+                        reqOrderId = rs.getInt("ORDER_ID");
                         break;
                     }
                 }
@@ -189,7 +193,7 @@ public class Mechanic {
                 selfDurations.put(2, 0);
                 selfDurations.put(3, 0);
                 selfDurations.put(4, 0);
-                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + loginContext.SCID + " and EMPID=" + loginContext.ID;
+                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + loginContext.SCID + " and EMPID=" + loginContext.ID + " and ORDER_ID<>" + selfOrderId;
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     int currDurr = rs.getInt("WEEK") + rs.getInt("END_SLOT") - rs.getInt("START_SLOT");
@@ -208,7 +212,7 @@ public class Mechanic {
                 reqDurations.put(2, 0);
                 reqDurations.put(3, 0);
                 reqDurations.put(4, 0);
-                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + empID + " and EMPID=" + loginContext.ID;
+                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + loginContext.SCID + " and EMPID=" + empID + " and ORDER_ID<>" + reqOrderId;
                 rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     int currDurr = rs.getInt("WEEK") + rs.getInt("END_SLOT") - rs.getInt("START_SLOT");
