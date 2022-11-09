@@ -26,10 +26,12 @@ public class Login {
             String sql1 = "SELECT * FROM CUSTOMER WHERE USERNAME='" + username + "' AND SCID=" + centerId + " AND LNAME='" + password + "'";
             ResultSet rs1 = stmt.executeQuery(sql1);
             if (rs1 != null && rs1.isBeforeFirst()) {
-
                 loginContext.SCID = String.valueOf(centerId);
-                loginContext.ID = String.valueOf(username);
                 loginContext.role = "CUSTOMER";
+                while (rs1.next()) {
+                    loginContext.ID = rs1.getString("CID");
+                }
+                System.out.println(loginContext.ID);
             } else {
                 String sql2 = "SELECT * FROM EMPLOYEES WHERE EMPID=" + username + " AND SCID=" + centerId + " AND LNAME='" + password + "'";
                 ResultSet rs2 = stmt.executeQuery(sql2);
