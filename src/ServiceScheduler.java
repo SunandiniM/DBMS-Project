@@ -43,11 +43,10 @@ public class ServiceScheduler {
             switch (option){
                 case 1:
                     cartObj = ScheduleMaintainance(vinNumber, cartObj);
-                    if (cartObj == null) {
-                        Menu(loginContext);
-                    }
+                    System.out.println("Schedule Maintenance Value" + cartObj.Maintainance);
                     break;
                 case 2:
+                    cartObj = ScheduleRepairService(vinNumber, cartObj);
                     break;
                 case 3:
                     break;
