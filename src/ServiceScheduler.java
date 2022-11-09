@@ -87,6 +87,7 @@ public class ServiceScheduler {
                 "(select MAX(H3.DAY) from HOURLY_EMPLOYEE_SCHEDULE H3 where H3.SCID=" + loginContext.SCID + " and H3.EMPID=H1.EMPID and DAY in" +
                     "(select MAX(H4.WEEK) from HOURLY_EMPLOYEE_SCHEDULE H4 where H4.SCID=" + loginContext.SCID + " and H4.EMPID=H1.EMPID))) and " +
                     "H1.EMPID in (select EMPID from EMPLOYEES E where E.SCID=30002 and E.EMPID=H1.EMPID and E.EROLE='MECHANIC')";
+            System.out.println(sql);
             ResultSet rs = stmt.executeQuery(sql);
             int i = 1;
             System.out.println("Time Slots");
