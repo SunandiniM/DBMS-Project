@@ -115,11 +115,12 @@ create table OFFERS(
 
 create table INVOICE (
     ORDER_ID number(9),
+    SCID number(9), 
     CID number(9),
     BILL number(7), 
     STATUS number(1),
     PRIMARY KEY(ORDER_ID),
-    FOREIGN KEY(CID) REFERENCES CUSTOMER ON DELETE CASCADE
+    FOREIGN KEY(SCID, CID) REFERENCES CUSTOMER ON DELETE CASCADE
 );
 
 create table SERVICE_EVENT ( 
