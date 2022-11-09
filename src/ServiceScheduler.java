@@ -1,6 +1,5 @@
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Scanner;
+import java.sql.*;
+import java.util.*;
 
 public class ServiceScheduler {
     public void Menu(LoginContext loginContext) {
@@ -115,39 +114,30 @@ public class ServiceScheduler {
     }
 
     public Cart ScheduleRepairService(String vin, Cart cart, LoginContext loginContext) {
+        Scanner in = new Scanner(System.in);
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql = "select DISTINCT s.CATEGORY from REPAIR_SERVICE s, OFFERS o where o.scid=30001 and o.SID=s.SID";
+            String sql = "select DISTINCT s.CATEGORY as CATEGORY from REPAIR_SERVICE s, OFFERS o where o.scid=" + loginContext.SCID + " and o.SID=s.SID";
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs != null && rs.isBeforeFirst()) {
-                while (rs.next()) {
-//                    nextSchedule = rs.getString("SCHEDULE");
-                }
+            int i = 1;
+            System.out.println("Enter your choice from below list");
+            List<String> categories = new ArrayList<>();
+            while (rs.next()) {
+                System.out.println("" + i + ". " + rs.getString("CATEGORY"));
+                categories.add(rs.getString("CATEGORY"));
+                i++;
+            }
+            System.out.println("" + i + ". Go Back");
+            int option = in.nextInt();
+            if (option == i) {
+                return cart;
             }
         } catch(Exception e) {
-            System.out.println("Failed to fetch maintenance schedule details");
+            System.out.println("Failed to fetch repair schedule categories");
             System.out.println(e);
         }
-        String[] listOfCategories = {"Engine Services", "Exhaust Services", "Electrical Services",
-                "Transmission Services", "Tire Services", "Heating and AC Services"};
-
-        for (int i = 0; i < listOfCategories.length; i++) {
-            System.out.println("Enter " + (i + 1) + " to pick " + listOfCategories[i]);
-        }
-
-        System.out.println("Enter anything else to go back");
-
-        Scanner in = new Scanner(System.in);
-        int option = in.nextInt();
-
-        if (option > listOfCategories.length) {
-            return null;
-        }
-
-        //
-
         return cart;
     }
 
