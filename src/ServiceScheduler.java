@@ -1,7 +1,5 @@
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.sql.*;
+import java.util.*;
 
 public class ServiceScheduler {
     public void Menu(LoginContext loginContext) {
@@ -61,12 +59,13 @@ public class ServiceScheduler {
 
     public Cart ScheduleMaintainance(String vin, Cart cart, LoginContext loginContext) {
         String nextSchedule = "A";
-
+        DBConnection dbConn;
+        Statement stmt;
         try {
-            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
-            Statement stmt = dbConn.conn.createStatement();
-            String sql = "select SCHEDULE from VEHICLE where VIN_NO=" + vin;
+            stmt = dbConn.conn.createStatement();
+            String sql = "select SCHEDULE from VEHICLE where VIN_NO='" + vin + "'";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs != null && rs.isBeforeFirst()) {
                 while (rs.next()) {
@@ -98,19 +97,14 @@ public class ServiceScheduler {
                 sid = 115;
             }
             try {
-                DBConnection dbConn = DBConnection.getDBConnection();
-                dbConn.createConnection();
-                Statement stmt = dbConn.conn.createStatement();
-                String sql = "select PRICE from OFFERS o, VEHICLE v where v.VIN_NO='" +
+                DBConnection dbConn2 = DBConnection.getDBConnection();
+                Statement stmt2 = dbConn2.conn.createStatement();
+                String sql2 = "select PRICE from OFFERS o, VEHICLE v where v.VIN_NO='" +
                         vin + "' and o.SCID=" + loginContext.SCID + " and o.SID=" + sid + " and o.MFG=v.MFG";
-                ResultSet rs = stmt.executeQuery(sql);
-                if (rs != null && rs.isBeforeFirst()) {
-                    while (rs.next()) {
-                        cart.MaintenanceCost = rs.getInt("PRICE");
-                    }
+                ResultSet rs2 = stmt2.executeQuery(sql2);
+                while (rs2.next()) {
+                    cart.MaintenanceCost = rs2.getInt("PRICE");
                 }
-                System.out.println(cart.Maintainance);
-                System.out.println(cart.MaintenanceCost);
             } catch(Exception e) {
                 System.out.println("Failed to fetch maintenance schedule details");
                 System.out.println(e);
@@ -120,37 +114,30 @@ public class ServiceScheduler {
     }
 
     public Cart ScheduleRepairService(String vin, Cart cart, LoginContext loginContext) {
+        Scanner in = new Scanner(System.in);
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql = "select DISTINCT s.CATEGORY from REPAIR_SERVICE s, OFFERS o where o.scid=30001 and o.SID=s.SID";
+            String sql = "select DISTINCT s.CATEGORY as CATEGORY from REPAIR_SERVICE s, OFFERS o where o.scid=" + loginContext.SCID + " and o.SID=s.SID";
             ResultSet rs = stmt.executeQuery(sql);
-            if (rs != null && rs.isBeforeFirst()) {
-                while (rs.next()) {
-//                    nextSchedule = rs.getString("SCHEDULE");
-                }
+            int i = 1;
+            System.out.println("Enter your choice from below list");
+            List<String> categories = new ArrayList<>();
+            while (rs.next()) {
+                System.out.println("" + i + ". " + rs.getString("CATEGORY"));
+                categories.add(rs.getString("CATEGORY"));
+                i++;
+            }
+            System.out.println("" + i + ". Go Back");
+            int option = in.nextInt();
+            if (option == i) {
+                return cart;
             }
         } catch(Exception e) {
-            System.out.println("Failed to fetch maintenance schedule details");
+            System.out.println("Failed to fetch repair schedule categories");
             System.out.println(e);
         }
-        String[] listOfCategories = {"Engine Services", "Exhaust Services", "Electrical Services",
-                "Transmission Services", "Tire Services", "Heating and AC Services"};
-
-        for (int i = 0; i < listOfCategories.length; i++) {
-            System.out.println("Enter " + (i + 1) + " to pick " + listOfCategories[i]);
-        }
-
-        System.out.println("Enter anything else to go back");
-
-        Scanner in = new Scanner(System.in);
-        int option = in.nextInt();
-
-        if (option > listOfCategories.length) {
-            return null;
-        }
-
         return cart;
     }
 

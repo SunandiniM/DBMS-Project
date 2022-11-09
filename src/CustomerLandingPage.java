@@ -32,7 +32,7 @@ public class CustomerLandingPage {
         // menu
         System.out.println("Enter 1 to View Service History");
         System.out.println("Enter 2 to Schedule Service");
-        System.out.println("Enter anything to go back");
+        System.out.println("Enter 3 to go back");
 
         Scanner in = new Scanner(System.in);
         int option = in.nextInt();
