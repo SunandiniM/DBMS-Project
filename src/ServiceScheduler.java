@@ -32,6 +32,26 @@ public class ServiceScheduler {
                 System.out.println(e);
             }
         }
+
+        try {
+            dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            stmt = dbConn.conn.createStatement();
+            sql = "SELECT COUNT(*) FROM EMPLOYEES where SCID=" + loginContext.SCID + " and EROLE= 'MECHANIC'";
+            rs = stmt.executeQuery(sql);
+            int num = 4;
+            while (rs.next()) {
+                num = rs.getInt(1);
+            }
+            System.out.println( "Number of mechanics " + num);
+            if (num < 3) {
+                return;
+            }
+
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+
         Cart cartObj = new Cart();
         while (true) {
             System.out.println("Enter 1 to Add Schedule Maintenance");
@@ -363,7 +383,7 @@ public class ServiceScheduler {
         // assumes the cart is filled and has th
         int cost = cart.getTotalCost();
         int invoiceID = -1;
-        
+
         // First create the invoice -> generate the id, put cost as bill, status 0 -> unpaid
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
