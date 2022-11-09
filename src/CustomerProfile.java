@@ -138,6 +138,16 @@ public class CustomerProfile {
             }catch (Exception e) {
                 System.out.println("Failed to add in OWNED_BY" + e);
             }
+
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql = "UPDATE CUSTOMER SET PROFILE_STATUS = 1 WHERE CID = " + loginContext.ID + " AND SCID = " + loginContext.SCID;
+                stmt.executeUpdate(sql);
+            }catch (Exception e) {
+                System.out.println(e);
+            }
         }else{
             return;
         }
