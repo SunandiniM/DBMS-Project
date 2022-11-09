@@ -21,7 +21,7 @@ public class ServiceScheduler {
                 dbConn = DBConnection.getDBConnection();
                 dbConn.createConnection();
                 stmt = dbConn.conn.createStatement();
-                sql = "select * from OWNS where SCID=" + loginContext.SCID + " and CID=" + loginContext.ID + " and VIN_NO=" + vinNumber;
+                sql = "select * from OWNS where SCID=" + loginContext.SCID + " and CID=" + loginContext.ID + " and VIN_NO='" + vinNumber + "'";
                 rs = stmt.executeQuery(sql);
                 if (rs != null && rs.isBeforeFirst()) {
                     break;
