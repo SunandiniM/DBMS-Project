@@ -47,6 +47,7 @@ public class ServiceScheduler {
                     cartObj = ScheduleRepairService(vinNumber, cartObj, loginContext);
                     break;
                 case 3:
+                    ViewCartAndSelectScheduleTime(loginContext, cartObj);
                     break;
                 case 4:
                     return;
@@ -56,6 +57,37 @@ public class ServiceScheduler {
         }
     }
 
+    public void ViewCartAndSelectScheduleTime(LoginContext loginContext, Cart cart) {
+        System.out.println("Press 1 to continue with Scheduling");
+        System.out.println("Press 2 to go back");
+
+        Scanner in = new Scanner(System.in);
+        int option = in.nextInt();
+
+        switch (option) {
+            case 1:
+                ChooseSlots(loginContext, cart);
+            case 2:
+                return;
+            default:
+                ViewCartAndSelectScheduleTime(loginContext, cart);
+        }
+    }
+
+    public void ChooseSlots(LoginContext loginContext, Cart cart) {
+        Mechanic mechanic = new Mechanic();
+        ArrayList<MechanicFreeSlot> freeSlots = mechanic.getFreeSlot(loginContext, cart.getTotalDuration());
+
+        Scanner in = new Scanner(System.in);
+        for (int i = 0; i < freeSlots.size(); i++) {
+            System.out.println("Press " + i + " to select slot #" + i);
+            MechanicFreeSlot x = freeSlots.get(i);
+            System.out.println("SLOT : WEEK " + x.week + " DAY " + x.day + "START SLOT" + x.startSlot + " END SLOT " + x.endSlot);
+        }
+
+        int slotNumber = in.nextInt();
+        SubmitOrder(loginContext, cart, freeSlots.get(slotNumber));
+    }
 
     public Cart ScheduleMaintainance(String vin, Cart cart, LoginContext loginContext) {
         String nextSchedule = "A";
@@ -249,7 +281,7 @@ public class ServiceScheduler {
 
         // show the user and get the slots
 
-        try {
+        /*try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
@@ -259,6 +291,6 @@ public class ServiceScheduler {
             System.out.println("Successfully added a new customer profile");
         }catch (Exception e) {
             System.out.println("Failed to add in OWNED_BY" + e);
-        }
+        }*/
     }
 }
