@@ -47,7 +47,8 @@ public class ServiceScheduler {
                     cartObj = ScheduleRepairService(vinNumber, cartObj, loginContext);
                     break;
                 case 3:
-                    ViewCartAndSelectScheduleTime(loginContext, cartObj);
+//                    ViewCartAndSelectScheduleTime(loginContext, cartObj);
+                    viewCart(cartObj);
                     break;
                 case 4:
                     return;
