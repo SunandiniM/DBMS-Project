@@ -7,15 +7,15 @@ drop table TIMEOFF_REQUEST;
 drop table OFFERS;
 drop table OWNS;
 drop table WORKSIN;
+drop table HOURLY_EMPLOYEE_SCHEDULE;
+drop table INVOICE;
 drop table CUSTOMER;
 drop table VEHICLE;
-drop table HOURLY_EMPLOYEE_SCHEDULE;
 drop table EMPLOYEES;
 drop table MAINTAINANCE_SERVICE;
 drop table REPAIR_SERVICE;
 drop table SERVICE_CENTER;
 drop table SERVICE;
-drop table INVOICE;
 
 
 create table SERVICE_CENTER(   
@@ -115,11 +115,12 @@ create table OFFERS(
 
 create table INVOICE (
     ORDER_ID number(9),
+    SCID number(9), 
     CID number(9),
     BILL number(7), 
     STATUS number(1),
     PRIMARY KEY(ORDER_ID),
-    FOREIGN KEY(CID) REFERENCES CUSTOMER ON DELETE CASCADE
+    FOREIGN KEY(SCID, CID) REFERENCES CUSTOMER ON DELETE CASCADE
 );
 
 create table SERVICE_EVENT ( 

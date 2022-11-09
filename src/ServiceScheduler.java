@@ -167,15 +167,30 @@ public class ServiceScheduler {
             if (option == i || option < 0 || option > services.size()) {
                 return cart;
             } else {
-                cart.RepairServiceList.add(services.get(i).get(0));
-                cart.RepairServiceCostList.add(Integer.parseInt(services.get(i).get(1)));
-                cart.RepairServiceDurationList.add(Integer.parseInt(services.get(i).get(2)));
+                cart.RepairServiceList.add(services.get(option - 1).get(0));
+                cart.RepairServiceCostList.add(Integer.parseInt(services.get(option - 1).get(1)));
+                cart.RepairServiceDurationList.add(Integer.parseInt(services.get(option - 1).get(2)));
             }
         } catch(Exception e) {
             System.out.println("Failed to fetch repair schedule categories");
             System.out.println(e);
         }
         System.out.println(cart.toString());
+        System.out.println(cart.Maintainance);
+        System.out.println(cart.MaintenanceCost);
+        System.out.println(cart.MaintenanceDuration);
+        for (String str : cart.RepairServiceList)
+        {
+            System.out.println(str);
+        }
+        for (int str : cart.RepairServiceCostList)
+        {
+            System.out.println(str);
+        }
+        for (int str : cart.RepairServiceDurationList)
+        {
+            System.out.println(str);
+        }
         return cart;
     }
 
