@@ -165,7 +165,7 @@ public class ServiceScheduler {
             }
             System.out.println("" + i + ". Go Back");
             int option = in.nextInt();
-            if (option == i || option < 0 || option >= categories.size()) {
+            if (option == i || option < 0 || option > categories.size()) {
                 return cart;
             } else {
                 return getServicesOfCategory(categories.get(option - 1), vin, cart, loginContext);
@@ -198,7 +198,7 @@ public class ServiceScheduler {
             }
             System.out.println("" + i + ". Go Back");
             int option = in.nextInt();
-            if (option == i || option < 0 || option >= services.size()) {
+            if (option == i || option < 0 || option > services.size()) {
                 return cart;
             } else {
                 cart.RepairServiceList.add(services.get(option - 1).get(0));
