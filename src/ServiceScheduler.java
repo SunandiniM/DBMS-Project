@@ -177,7 +177,8 @@ public class ServiceScheduler {
         }
         System.out.println(cart.toString());
         System.out.println(cart.Maintainance);
-        System.out.println(cart.Maintainance);
+        System.out.println(cart.MaintenanceCost);
+        System.out.println(cart.MaintenanceDuration);
         for (String str : cart.RepairServiceList)
         {
             System.out.println(str);
