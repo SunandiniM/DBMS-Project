@@ -1,7 +1,9 @@
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class CustomerProfile {
-    public void AskForProfile(String customerId, String serviceCenterID) {
+    public void AskForProfile(LoginContext loginContext) {
         System.out.println("Enter 1 to View Profile");
         System.out.println("Enter 2 to Add a car to profile");
         System.out.println("Enter 3 to Delete a car from profile");
@@ -11,24 +13,44 @@ public class CustomerProfile {
         int option = in.nextInt();
         switch (option) {
             case 1:
-                ShowCustomerProfile();
+                ShowCustomerProfile(loginContext);
+                break;
             case 2:
-                AskToAddCar();
+                AskToAddCar(loginContext);
+                break;
             case 3:
-                AskToRemoveCar();
+                AskToRemoveCar(loginContext);
+                break;
             case 4:
+                return;
+            default:
                 return;
         }
 
+        return;
     }
 
-    public void ShowCustomerProfile() {
+    public void ShowCustomerProfile(LoginContext loginContext) {
         // call jdbc function to show the customer profile
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql1 = "SELECT * FROM CUSTOMER WHERE CID =" + loginContext.ID + " AND SCID=" + loginContext.SCID;
+            ResultSet rs1 = stmt.executeQuery(sql1);
+
+            while (rs1.next()) {
+                System.out.println(loginContext.ID + " " + rs1.getString("FNAME") + " " + rs1.getString("LNAME") + " " +
+                        rs1.getString("ADDRESS") + " " + rs1.getString("EMAIL") + " ");
+            }
+
+        }catch (Exception e) {
+            System.out.println("Failed to get customer profile "+e);
+        }
     }
 
-    public void AskToRemoveCar() {
+    public void AskToRemoveCar(LoginContext loginContext) {
         // display all the cars
-
         Scanner in = new Scanner(System.in);
         System.out.println("Press 1 to delete a car from the profile or any other key to go back");
         int option = in.nextInt();
@@ -36,12 +58,32 @@ public class CustomerProfile {
             System.out.println("Enter the vin number of the car you want to delete");
             String vin = in.nextLine();
             // call jdbc function to delete
+
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql1 = "DELETE FROM VEHICLE WHERE VIN =" + "'" + vin + "'";
+                stmt.executeUpdate(sql1);
+            }catch (Exception e) {
+                System.out.println("Failed to delete vehicle "+e);
+            }
+
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql1 = "DELETE FROM OWNS WHERE VIN =" + "'" + vin + "' AND CID =" + loginContext.ID;
+                stmt.executeUpdate(sql1);
+            }catch (Exception e) {
+                System.out.println("Failed to delete vehicle from OWNS " + e);
+            }
         }else {
             return;
         }
     }
 
-    public void AskToAddCar() {
+    public void AskToAddCar(LoginContext loginContext) {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter the VIN Number of CAR");
         String vin = in.nextLine();
@@ -60,6 +102,16 @@ public class CustomerProfile {
 
         if (option == 1) {
             // call the JDBC function to save a car
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql = "INSERT INTO VEHICLE VALUES ('" + vin + "', " + year + ",'" + manName + "', " + mileage + "," + "'N'" + ")";
+                System.out.println("Vehicle in : " + sql);
+                stmt.executeUpdate(sql);
+            }catch (Exception e) {
+                System.out.println("Failed to add vehicle " + e);
+            }
         }else{
             return;
         }

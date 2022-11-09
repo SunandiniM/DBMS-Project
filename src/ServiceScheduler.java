@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class ServiceScheduler {
-    public void Menu() {
+    public void Menu(LoginContext loginContext) {
         Scanner in = new Scanner(System.in);
         System.out.println("Enter VIN Number");
         String vinNumber = in.nextLine();
@@ -19,9 +19,10 @@ public class ServiceScheduler {
             case 1:
                 cartObj = ScheduleMaintainance(vinNumber, cartObj);
                 if (cartObj == null) {
-                    Menu();
+                    Menu(loginContext);
                 }
             case 2:
+
             case 3:
             default:
 
@@ -62,6 +63,8 @@ public class ServiceScheduler {
         if (option > listOfCategories.length) {
             return null;
         }
+
+        //
 
         return cart;
     }
