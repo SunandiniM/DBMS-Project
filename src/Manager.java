@@ -235,7 +235,8 @@ public class Manager {
                                     sql = "INSERT INTO OFFERS VALUES ('" + rs.getString("SID") + "', '" + loginContext.SCID + "', '" + manf + "', '" + dur + "', '" + price + "')";
                                     System.out.println("SQL Query");
                                     System.out.println(sql);
-                                    stmt.executeUpdate(sql);
+                                    Statement stmt2 = dbConn.conn.createStatement();
+                                    stmt2.executeUpdate(sql);
                                     System.out.println("Successfully added repair service price for service " + rs.getString("SID"));
                                 } catch (Exception e) {
                                     System.out.println("Failed to setup repair service price for schedule " + rs.getString("SID"));
