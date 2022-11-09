@@ -225,22 +225,44 @@ public class ServiceScheduler {
                 invoiceID = rs.getInt("S");
             }
             invoiceID += 1;
-            sql = "INSERT INTO INVOICE(ORDERID, CID, BILL, STATUS) VALUES (" + invoiceID + "," + loginContext.ID + ", " + cost + ", 0)";
+            sql = "INSERT INTO INVOICE(ORDER_ID, SCID, CID, BILL, STATUS) VALUES (" + invoiceID + "," + loginContext.SCID + ", " + loginContext.ID + ", " + cost + ", 0)";
             stmt.executeUpdate(sql);
-            System.out.println("Successfully added a new customer profile");
         }catch (Exception e) {
-            System.out.println("Failed to add in OWNED_BY" + e);
+            System.out.println("Failed to add in INVOICE " + e);
         }
 
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             try{
+                System.out.println();
                 for (int i = 0; i < cart.RepairServiceList.size(); i++) {
                     String serviceID = cart.RepairServiceList.get(i);
                     Statement stmt = dbConn.createConnection().createStatement();
                     String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID +")";
+                    System.out.println(sql);
                     stmt.executeUpdate(sql);
                 }
+
+                if (!cart.Maintainance.equals("")) {
+
+                    int serviceID = 0;
+
+                    if (cart.Maintainance.equals("A")){
+                        serviceID = 113;
+                    } else if (cart.Maintainance.equals("B")) {
+                        serviceID = 114;
+                    } else  {
+                        serviceID = 115;
+                    }
+
+
+
+                        Statement stmt = dbConn.createConnection().createStatement();
+                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID +")";
+                        System.out.println(sql);
+                        stmt.executeUpdate(sql);
+                }
+
             }catch (Exception e) {
                 System.out.println("Failed to put in service event " + e);
             }
@@ -253,16 +275,16 @@ public class ServiceScheduler {
 
         // show the user and get the slots
 
-        /*try {
+        try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
             String sql = "INSERT INTO HOURLY_EMPLOYEE_SCHEDULE VALUES ("+ loginContext.SCID + "," + invoiceID + "," +
                     mechanicFreeSlot.EMPID + ", " + mechanicFreeSlot.week + "," + mechanicFreeSlot.day + "," + mechanicFreeSlot.startSlot + "," + mechanicFreeSlot.endSlot + ")";
+            System.out.println(sql);
             stmt.executeUpdate(sql);
-            System.out.println("Successfully added a new customer profile");
         }catch (Exception e) {
-            System.out.println("Failed to add in OWNED_BY" + e);
-        }*/
+            System.out.println("Failed to add in HOURLY_EMPLOYEE_SCHEDULE" + e);
+        }
     }
 }

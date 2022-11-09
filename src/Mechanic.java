@@ -241,7 +241,7 @@ public class Mechanic {
                 mechanics.add(Integer.toString(rs.getInt(0)));
             }
         }catch (Exception e) {
-            System.out.println("Cannot query mechanics from the service center");
+            System.out.println("Cannot query mechanics from the service center" + e);
         }
 
         /*
