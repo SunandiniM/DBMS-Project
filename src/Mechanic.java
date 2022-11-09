@@ -245,7 +245,8 @@ public class Mechanic {
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql = "INSERT INTO SWAP_REQUEST VALUES('" + SCID + "', '" + empid + "', '" + req_empid
+            String sql = "INSERT INTO SWAP_REQUEST(SCID, EMPID, REQ_EMP_ID, DAY, WEEK, START_SLOT, END_SLOT, REQ_DAY, REQ_WEEK, REQ_START_SLOT, REQ_END_SLOT, STATUS)" +
+                    " VALUES('" + SCID + "', '" + empid + "', '" + req_empid
                     + "', '" + day + "', '" + week + "', '" + start + "', '" + stop
                     + "', '" + rday + "', '" + rweek + "', '" + rstart + "', '" + rstop + "', '" + status +"')";
             stmt.executeUpdate(sql);
