@@ -177,6 +177,34 @@ public class ServiceScheduler {
         return cart;
     }
 
+    public void viewCart(Cart cartObj) {
+        Scanner in = new Scanner(System.in);
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String ids = cartObj.getServicesList();
+            String sql = "select SNAME from SERVICE where SID in " + ids;
+            ResultSet rs = stmt.executeQuery(sql);
+            int i = 1;
+            System.out.println("Cart Items");
+            List<List<String>> services = new ArrayList<>();
+            while (rs.next()) {
+                System.out.println("" + i + ". " + rs.getString("SNAME"));
+                services.add(Arrays.asList(rs.getString("SID"), rs.getString("PRICE"), rs.getString("DURATION")));
+                i++;
+            }
+            System.out.println("" + i + ". Go Back");
+            int option = in.nextInt();
+            if (option == i || option < 0 || option > services.size()) {
+                return;
+            }
+        } catch(Exception e) {
+            System.out.println("Failed to fetch cart");
+            System.out.println(e);
+        }
+    }
+
     public void SubmitOrder(LoginContext loginContext, Cart cart, MechanicFreeSlot mechanicFreeSlot) {
         // assumes the cart is filled and has th
         int cost = cart.getTotalCost();
