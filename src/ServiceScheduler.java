@@ -47,7 +47,8 @@ public class ServiceScheduler {
                     cartObj = ScheduleRepairService(vinNumber, cartObj, loginContext);
                     break;
                 case 3:
-                    ViewCartAndSelectScheduleTime(loginContext, cartObj);
+//                    ViewCartAndSelectScheduleTime(loginContext, cartObj);
+                    viewCart(cartObj);
                     break;
                 case 4:
                     return;
@@ -189,9 +190,11 @@ public class ServiceScheduler {
             System.out.println("Enter your choice from below list");
             List<List<String>> services = new ArrayList<>();
             while (rs.next()) {
-                System.out.println("" + i + ". " + rs.getString("SNAME"));
-                services.add(Arrays.asList(rs.getString("SID"), rs.getString("PRICE"), rs.getString("DURATION")));
-                i++;
+                if (!cart.RepairServiceList.contains(rs.getString("SID"))) {
+                    System.out.println("" + i + ". " + rs.getString("SNAME"));
+                    services.add(Arrays.asList(rs.getString("SID"), rs.getString("PRICE"), rs.getString("DURATION")));
+                    i++;
+                }
             }
             System.out.println("" + i + ". Go Back");
             int option = in.nextInt();
@@ -207,6 +210,27 @@ public class ServiceScheduler {
             System.out.println(e);
         }
         return cart;
+    }
+
+    public void viewCart(Cart cartObj) {
+        Scanner in = new Scanner(System.in);
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String ids = cartObj.getServicesList();
+            String sql = "select SNAME from SERVICE where SID in " + ids;
+            ResultSet rs = stmt.executeQuery(sql);
+            int i = 1;
+            System.out.println("Cart Items");
+            while (rs.next()) {
+                System.out.println("" + i + ". " + rs.getString("SNAME"));
+                i++;
+            }
+        } catch(Exception e) {
+            System.out.println("Failed to fetch cart");
+            System.out.println(e);
+        }
     }
 
     public void SubmitOrder(LoginContext loginContext, Cart cart, MechanicFreeSlot mechanicFreeSlot) {

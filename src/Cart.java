@@ -17,6 +17,23 @@ public class Cart {
         RepairServiceDurationList = new ArrayList<Integer>();
     }
 
+    public String getServicesList() {
+        String ids = "(";
+        String currId = "113";
+        if (Maintainance.equals("B")) {
+            currId = "114";
+        } else if (Maintainance.equals("C")) {
+            currId = "115";
+        }
+        ids = ids.concat(currId);
+        for (String s: RepairServiceList) {
+            ids = ids.concat(", " + s);
+        }
+        ids = ids.concat(")");
+        System.out.println(ids);
+        return ids;
+    }
+
     public int getTotalCost() {
         int sum = MaintenanceCost;
         for (int i=0;i<RepairServiceList.size();i++) {
