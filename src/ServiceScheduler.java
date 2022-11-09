@@ -165,7 +165,7 @@ public class ServiceScheduler {
             }
             System.out.println("" + i + ". Go Back");
             int option = in.nextInt();
-            if (option == i || option < 0 || option > categories.size()) {
+            if (option == i || option < 0 || option >= categories.size()) {
                 return cart;
             } else {
                 return getServicesOfCategory(categories.get(option - 1), vin, cart, loginContext);
@@ -196,7 +196,7 @@ public class ServiceScheduler {
             }
             System.out.println("" + i + ". Go Back");
             int option = in.nextInt();
-            if (option == i || option < 0 || option > services.size()) {
+            if (option == i || option < 0 || option >= services.size()) {
                 return cart;
             } else {
                 cart.RepairServiceList.add(services.get(option - 1).get(0));
@@ -221,16 +221,9 @@ public class ServiceScheduler {
             ResultSet rs = stmt.executeQuery(sql);
             int i = 1;
             System.out.println("Cart Items");
-            List<List<String>> services = new ArrayList<>();
             while (rs.next()) {
                 System.out.println("" + i + ". " + rs.getString("SNAME"));
-                services.add(Arrays.asList(rs.getString("SID"), rs.getString("PRICE"), rs.getString("DURATION")));
                 i++;
-            }
-            System.out.println("" + i + ". Go Back");
-            int option = in.nextInt();
-            if (option == i || option < 0 || option > services.size()) {
-                return;
             }
         } catch(Exception e) {
             System.out.println("Failed to fetch cart");
