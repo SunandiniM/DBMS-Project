@@ -23,7 +23,7 @@ public class Login {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql1 = "SELECT * FROM CUSTOMER WHERE CID='" + username + "' AND SCID=" + centerId + " AND LNAME='" + password + "'";
+            String sql1 = "SELECT * FROM CUSTOMER WHERE USERNAME='" + username + "' AND SCID=" + centerId + " AND LNAME='" + password + "'";
             ResultSet rs1 = stmt.executeQuery(sql1);
             if (rs1 != null && rs1.isBeforeFirst()) {
 
