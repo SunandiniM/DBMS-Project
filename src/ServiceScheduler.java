@@ -176,7 +176,7 @@ public class ServiceScheduler {
             DBConnection dbConn = DBConnection.getDBConnection();
             try{
                 for (int i = 0; i < cart.RepairServiceList.size(); i++) {
-                    String serviceID = cart.RepairServiceListID.get(i);
+                    String serviceID = cart.RepairServiceList.get(i);
                     Statement stmt = dbConn.createConnection().createStatement();
                     String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID +")";
                     stmt.executeUpdate(sql);
