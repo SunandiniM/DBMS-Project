@@ -103,8 +103,12 @@ public class ServiceScheduler {
                 String sql = "select PRICE from OFFERS o, VEHICLE v where v.VIN_NO='" +
                         vin + "' and o.SCID=" + loginContext.SCID + " and o.SID=" + sid + " and o.MFG=v.MFG";
                 ResultSet rs = stmt.executeQuery(sql);
+                System.out.print("We are here");
                 if (rs != null && rs.isBeforeFirst()) {
+                    System.out.print("We are here 2");
                     while (rs.next()) {
+                        System.out.print("We are here 3");
+                        System.out.println(rs.getString("PRICE"));
                         cart.MaintenanceCost = rs.getInt("PRICE");
                     }
                 }
