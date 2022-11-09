@@ -7,6 +7,7 @@ drop table TIMEOFF_REQUEST;
 drop table OFFERS;
 drop table OWNS;
 drop table WORKSIN;
+drop table INVOICE;
 drop table CUSTOMER;
 drop table VEHICLE;
 drop table HOURLY_EMPLOYEE_SCHEDULE;
@@ -15,7 +16,7 @@ drop table MAINTAINANCE_SERVICE;
 drop table REPAIR_SERVICE;
 drop table SERVICE_CENTER;
 drop table SERVICE;
-drop table INVOICE;
+
 
 
 create table SERVICE_CENTER(   
