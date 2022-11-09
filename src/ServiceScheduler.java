@@ -146,7 +146,6 @@ public class ServiceScheduler {
 
     // IMPLEMENT THIS ONCE JDBC IS IMPLEMENTED
     public Cart getServicesOfCategory(String category, String vin, Cart cart, LoginContext loginContext) {
-//        select s.SNAME as SNAME from SERVICE S, REPAIR_SERVICE r, OFFERS o, VEHICLE v where v.VIN_NO='88TSM888' and v.MFG=o.MFG and o.scid=30003 and o.SID=s.SID and r.CATEGORY='Tire Services' and r.sid=s.sid;
         Scanner in = new Scanner(System.in);
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
