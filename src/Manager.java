@@ -1,3 +1,4 @@
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
@@ -201,7 +202,61 @@ public class Manager {
     }
 
     public void SetupRepairServicePrices() {
-        // Load all the repair services from the db and find a way to setup the price for them
+        while (true) {
+            Scanner in = new Scanner(System.in);
+            System.out.println("1. Setup Prices");
+            System.out.println("2. Go Back");
+            int option = in.nextInt();
+            switch (option) {
+                case 1:
+                    while (true) {
+                        ResultSet rs;
+                        DBConnection dbConn;
+                        String sql;
+                        Statement stmt;
+                        try {
+                            dbConn = DBConnection.getDBConnection();
+                            dbConn.createConnection();
+                            stmt = dbConn.conn.createStatement();
+                            in = new Scanner(System.in);
+                            System.out.println("Enter Manufacturer Name");
+                            String manf = in.nextLine();
+                            sql = "select s1.SID as SID, s1.SNAME as SNAME from SERVICE s1, REPAIR_SERVICE s2 where s1.SID = s2.SID and s1.SID not in" +
+                                    "(select DISTINCT o2.SID from OFFERS o2 where o2.SCID=" + loginContext.SCID + " and o2.MFG='" + manf + "')";
+                            rs = stmt.executeQuery(sql);
+                            while (rs.next()) {
+                                in = new Scanner(System.in);
+                                System.out.println("Enter price for " + rs.getString("SNAME"));
+                                int price = in.nextInt();
+                                in = new Scanner(System.in);
+                                System.out.println("Enter duration for " + rs.getString("SNAME"));
+                                int dur = in.nextInt();
+                                try {
+                                    sql = "INSERT INTO OFFERS VALUES ('" + rs.getString("SID") + "', '" + loginContext.SCID + "', '" + manf + "', '" + dur + "', '" + price + "')";
+                                    stmt.executeUpdate(sql);
+                                    System.out.println("Successfully added maintenance service price for service " + rs.getString("SID"));
+                                } catch (Exception e) {
+                                    System.out.println("Failed to setup maintenance service price for schedule " + rs.getString("SID"));
+                                    System.out.println(e);
+                                }
+                            }
+                        } catch(Exception e) {
+                            System.out.println("Failed to setup maintenance service price");
+                            System.out.println(e);
+                        }
+                        in = new Scanner(System.in);
+                        System.out.println("Have more manufacturers?\n1. Yes\n2. No");
+                        if (in.nextInt() == 2) {
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    return;
+                default:
+                    break;
+            }
+        }
     }
 
     public void SetupOperationalHours() {
