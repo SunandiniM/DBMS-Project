@@ -108,16 +108,11 @@ public class ServiceScheduler {
                     "(select MAX(H4.WEEK) from HOURLY_EMPLOYEE_SCHEDULE H4 where H4.SCID=" + loginContext.SCID + " and H4.EMPID=H1.EMPID))) and " +
                     "H1.EMPID in (select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EMPID=H1.EMPID and E.EROLE='MECHANIC')";
             ResultSet rs = stmt.executeQuery(sql);
-//            int i = 1;
-//            System.out.println("Time Slots");
             List<String> empIdList = new ArrayList<>();
             List<List<Integer>> currSlotDetails = new ArrayList<>();
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
                 currSlotDetails.add(Arrays.asList(rs.getInt("WEEK"), rs.getInt("DAY"), rs.getInt("END_SLOT")));
-//                String temp = rs.getString("SCID") + " " + rs.getString("EMPID") + " " + rs.getString("WEEK") + " " + rs.getString("DAY") + " " + rs.getString("END_SLOT");
-//                System.out.println("" + i + ". " + temp);
-//                i++;
             }
             if (empIdList.size() > 0) {
                 sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
@@ -129,9 +124,6 @@ public class ServiceScheduler {
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
                 currSlotDetails.add(Arrays.asList(1, 1, 0));
-//                String temp = loginContext.SCID + " " + rs.getString("EMPID") + " 0 0 0";
-//                System.out.println("" + i + ". " + temp);
-//                i++;
             }
             int numDays = 5;
             try {

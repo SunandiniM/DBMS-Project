@@ -30,26 +30,20 @@ public class Mechanic {
             switch (option) {
                 case 1:
                     ViewSchedule(loginContext);
-                    LandingPageMenu(loginContext);
                     break;
                 case 2:
                     RequestTimeOff(loginContext);
-                    LandingPageMenu(loginContext);
                     break;
                 case 3:
                     RequestSwap(loginContext);
-                    LandingPageMenu(loginContext);
                     break;
                 case 4:
                     AcceptRejectSwapRequests(loginContext);
-                    LandingPageMenu(loginContext);
                     break;
                 case 5:
-                    Login login = new Login();
-                    login.AskLogout();
                     return;
                 default:
-                    return;
+                    break;
             }
         }
     }
@@ -60,9 +54,12 @@ public class Mechanic {
             DBConnection dbConn = DBConnection.getDBConnection();
             Connection conn = dbConn.createConnection();
 
-            String sql = "select ORDER_ID,  min(WEEK) as start_week, min(DAY) as start_day, min(START_SLOT) as start_slot," +
-                    " max(WEEK) as end_week, max(DAY) as end_day, max(END_SLOT) as end_slot from HOURLY_EMPLOYEE_SCHEDULE" +
-                    " where EMPID=" + loginContext.ID + " and SCID=" + loginContext.SCID + " group by ORDER_ID";
+//            String sql = "select ORDER_ID,  min(WEEK) as start_week, min(DAY) as start_day, min(START_SLOT) as start_slot," +
+//                    " max(WEEK) as end_week, max(DAY) as end_day, max(END_SLOT) as end_slot from HOURLY_EMPLOYEE_SCHEDULE" +
+//                    " where EMPID=" + loginContext.ID + " and SCID=" + loginContext.SCID + " group by ORDER_ID";
+
+            String sql = "select ORDER_ID,  WEEK, DAY, START_SLOT, END_SLOT from HOURLY_EMPLOYEE_SCHEDULE" +
+                    " where EMPID=" + loginContext.ID + " and SCID=" + loginContext.SCID + " order by ORDER_ID";
 
             Statement stmt = dbConn.conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -70,10 +67,8 @@ public class Mechanic {
             while(rs.next()) {
                 System.out.println("--------------------------------------------------------------------------");
                 System.out.println("Order Id: " + rs.getString("ORDER_ID"));
-                String timeStr = rs.getString("start_week") + ", " + rs.getString("start_day") + ", " + rs.getString("start_slot");
-                System.out.println("Start Time Slot(Week, Day, Slot): " + timeStr);
-                timeStr = rs.getString("end_week") + ", " + rs.getString("end_day") + ", " + rs.getString("end_slot");
-                System.out.println("End Time Slot(Week, Day, Slot): " + timeStr);
+                String timeStr = rs.getString("WEEK") + ", " + rs.getString("DAY") + ", " + rs.getString("START_SLOT") + ", " + rs.getString("END_SLOT");
+                System.out.println("Time Slot(Week, Day, Start Slot, End Slot): " + timeStr);
             }
         } catch(Exception e) {
             System.out.println("Failed to print the schedule of the mechanic" + e);
@@ -131,58 +126,116 @@ public class Mechanic {
 
     public void RequestSwap(LoginContext loginContext) {
         Scanner in = new Scanner(System.in);
-
-        System.out.println("Enter the week you want a swap");
-        int week = in.nextInt();
-        in.nextLine();
-
-        System.out.println("Enter the day you want swap");
-        int day = in.nextInt();
-        in.nextLine();
-
-        System.out.println("Enter the slot start of swap");
-        int startSlot = in.nextInt();
-        in.nextLine();
-
-        System.out.println("Enter the end slot id of the swap");
-        int endSlot = in.nextInt();
-        in.nextLine();
-
+        System.out.println("Enter the start date week you want a swap");
+        int start_week = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the start date day you want swap");
+        int start_day = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the start date start slot of swap");
+        int start_Slot = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the end date week you want a swap");
+        int end_week = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the end date day you want swap");
+        int end_day = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the end date end slot id of the swap");
+        int end_Slot = in.nextInt();
+        in = new Scanner(System.in);
         System.out.println("Enter the employee ID of the mechanic that is being requested for swap");
         String empID = in.nextLine();
+        in = new Scanner(System.in);
+        System.out.println("Enter the start date week of requested employee");
+        int rstart_week = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the start date day of requested employee");
+        int rstart_day = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the start date start slot of requested employee");
+        int rstart_Slot = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the end date week of requested employee");
+        int rend_week = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the end date day of requested employee");
+        int rend_day = in.nextInt();
+        in = new Scanner(System.in);
+        System.out.println("Enter the end date end slot of requested employee");
+        int rend_Slot = in.nextInt();
+        in = new Scanner(System.in);
 
-        System.out.println("Enter the time slot range ");
-        int st = in.nextInt();
-        int end = in.nextInt();
-
-        System.out.println("Press 1 to send the request or any other key to go back");
+        System.out.println("Press 1 to send the request or 2 to go back");
         int option = in.nextInt();
         if (option == 1) {
             // JDBC Call
             try {
                 DBConnection dbConn = DBConnection.getDBConnection();
+                int status = 0;
                 Connection conn = dbConn.createConnection();
-                String sql1 = "INSERT INTO SWAP_REQUEST(SCID, EMPID, REQUESTED_EMP_ID, DAY, WEEK, START_SLOT, END_SLOT, STATUS) " +
-                        "VALUES( " + loginContext.SCID+ ","+ loginContext.ID + ","+  empID + "," + day + "," + week + "," + startSlot + "," + endSlot+ ", 0)";
-//                System.out.println(sql1);
+                String sql = "select ORDER_ID,  min(WEEK) as start_week, min(DAY) as start_day, min(START_SLOT) as start_slot," +
+                        " max(WEEK) as end_week, max(DAY) as end_day, max(END_SLOT) as end_slot from HOURLY_EMPLOYEE_SCHEDULE" +
+                        " where ORDER_ID<>-1 and EMPID=" + loginContext.ID + " and SCID=" + loginContext.SCID + " group by ORDER_ID";
                 Statement stmt = dbConn.conn.createStatement();
-                /*PreparedStatement stmt = conn.prepareStatement("INSERT INTO SWAP_REQUEST(SCID, EMPID, REQUESTED_EMP_ID, DAY, WEEK, START_SLOT, END_SLOT, STATUS) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
-                stmt.setString(1, loginContext.SCID);
-                stmt.setString(2, loginContext.ID);
-                stmt.setString(3, empID);
-                stmt.setString(4, day + "");
-                stmt.setString(5, week + "");
-                stmt.setString(6, startSlot + "");
-                stmt.setString(7, endSlot + "");
-                stmt.setString(8, 0+ "");
+                ResultSet rs = stmt.executeQuery(sql);
+                boolean selfSlot = false;
+                while (rs.next()) {
+                    if (rs.getInt("start_week") == start_week && rs.getInt("start_day") == start_day && rs.getInt("start_slot") == start_Slot
+                    && rs.getInt("end_week") == end_week && rs.getInt("end_day") == end_day && rs.getInt("end_slot") == end_Slot) {
+                        selfSlot = true;
+                    }
+                }
+                sql = "select ORDER_ID,  min(WEEK) as start_week, min(DAY) as start_day, min(START_SLOT) as start_slot," +
+                        " max(WEEK) as end_week, max(DAY) as end_day, max(END_SLOT) as end_slot from HOURLY_EMPLOYEE_SCHEDULE" +
+                        " where ORDER_ID<>-1 and EMPID=" + empID + " and SCID=" + loginContext.SCID + " group by ORDER_ID";
+                stmt = dbConn.conn.createStatement();
+                rs = stmt.executeQuery(sql);
+                boolean reqSlot = false;
+                while (rs.next()) {
+                    if (rs.getInt("start_week") == rstart_week && rs.getInt("start_day") == rstart_day && rs.getInt("start_slot") == rstart_Slot
+                            && rs.getInt("end_week") == rend_week && rs.getInt("end_day") == rend_day && rs.getInt("end_slot") == rend_Slot) {
+                        reqSlot = true;
+                    }
+                }
+                if (!selfSlot || !reqSlot) {
+                    System.out.println("Invalid Swap Request");
+                    return;
+                }
+                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + loginContext.SCID + " and EMPID=" + loginContext.ID;
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    if (rs.getInt("WEEK") == rstart_week && rs.getInt("DAY") == rstart_day && rs.getInt("START_SLOT") <= rstart_Slot && rstart_Slot <= rs.getInt("END_SLOT")) {
+                        status = -1;
+                        break;
+                    } else if (rs.getInt("WEEK") == rend_week && rs.getInt("DAY") == rend_day && rs.getInt("START_SLOT") <= rend_Slot && rend_Slot <= rs.getInt("END_SLOT")) {
+                        status = -1;
+                        break;
+                    }
+                }
+                if (status == -1) {
+                    System.out.println("Invalid Swap Request");
+                    return;
+                }
+                sql = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE where SCID=" + empID + " and EMPID=" + loginContext.ID;
+                rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    if (rs.getInt("WEEK") == start_week && rs.getInt("DAY") == start_day && rs.getInt("START_SLOT") <= start_Slot && start_Slot <= rs.getInt("END_SLOT")) {
+                        status = -1;
+                        break;
+                    } else if (rs.getInt("WEEK") == end_week && rs.getInt("DAY") == end_day && rs.getInt("START_SLOT") <= end_Slot && end_Slot <= rs.getInt("END_SLOT")) {
+                        status = -1;
+                        break;
+                    }
+                }
+                if (status == -1) {
+                    System.out.println("Invalid Swap Request");
+                    return;
+                }
 
-                System.out.println(stmt.toString());*/
-                stmt.executeUpdate(sql1);
             } catch(Exception e) {
                 System.out.println("Met with this exception while committing to the database " + e);
             }
-        }else{
-            return;
         }
     }
 
