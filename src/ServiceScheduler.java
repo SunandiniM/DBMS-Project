@@ -89,26 +89,41 @@ public class ServiceScheduler {
                     "H1.EMPID in (select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EMPID=H1.EMPID and E.EROLE='MECHANIC')";
             System.out.println(sql);
             ResultSet rs = stmt.executeQuery(sql);
-            int i = 1;
-            System.out.println("Time Slots");
+//            int i = 1;
+//            System.out.println("Time Slots");
             List<String> empIdList = new ArrayList<>();
             List<List<Integer>> currSlotDetails = new ArrayList<>();
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
                 currSlotDetails.add(Arrays.asList(rs.getInt("WEEK"), rs.getInt("DAY"), rs.getInt("END_SLOT")));
-                String temp = rs.getString("SCID") + " " + rs.getString("EMPID") + " " + rs.getString("WEEK") + " " + rs.getString("DAY") + " " + rs.getString("END_SLOT");
-                System.out.println("" + i + ". " + temp);
-                i++;
+//                String temp = rs.getString("SCID") + " " + rs.getString("EMPID") + " " + rs.getString("WEEK") + " " + rs.getString("DAY") + " " + rs.getString("END_SLOT");
+//                System.out.println("" + i + ". " + temp);
+//                i++;
             }
             sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
-                currSlotDetails.add(Arrays.asList(1, 1, 1));
-                String temp = loginContext.SCID + " " + rs.getString("EMPID") + " 1 1 1";
-                System.out.println("" + i + ". " + temp);
-                i++;
+                currSlotDetails.add(Arrays.asList(0, 0, 0));
+//                String temp = loginContext.SCID + " " + rs.getString("EMPID") + " 0 0 0";
+//                System.out.println("" + i + ". " + temp);
+//                i++;
             }
+            int duration = cart.getTotalDuration();
+            SelectedSlots nextStartSlots = getStartSlots(empIdList, currSlotDetails, 5, duration);
+            SelectedSlots nextEndSlots = getEndSlots(nextStartSlots, 5, duration);
+            System.out.println("Enter the time slot number of your choice");
+            for (int i=0;i<nextEndSlots.selectedIds.size();i++) {
+                String timeStr = nextStartSlots.selectedSlots.get(i).get(0) + ", " + nextStartSlots.selectedSlots.get(i).get(1) + ", " + nextStartSlots.selectedSlots.get(i).get(2);
+                System.out.println("Time Slot " + (i + 1));
+                System.out.println("Start week, day, hour: " + timeStr);
+                timeStr = nextEndSlots.selectedSlots.get(i).get(0) + ", " + nextEndSlots.selectedSlots.get(i).get(1) + ", " + nextEndSlots.selectedSlots.get(i).get(2);
+                System.out.println("End week, day, hour: " + timeStr);
+            }
+            Scanner in = new Scanner(System.in);
+            int option = in.nextInt();
+            System.out.println("Selected timeslot is " + option);
+
         } catch(Exception e) {
             System.out.println("Failed to fetch slots");
             System.out.println(e);
@@ -126,6 +141,67 @@ public class ServiceScheduler {
 //
 //        int slotNumber = in.nextInt();
 //        SubmitOrder(loginContext, cart, freeSlots.get(slotNumber));
+    }
+
+    public SelectedSlots getStartSlots(List<String> empIds, List<List<Integer>> slots, int numDays, int duration) {
+        List<List<Integer>> nextSlots = new ArrayList<>();
+        List<String> selectedIds = new ArrayList<>();
+        for (int i=0;i<slots.size();i++) {
+            int weekVal = slots.get(i).get(0);
+            int dayVal = slots.get(i).get(1);
+            int currSlotVal = slots.get(i).get(2);
+            currSlotVal += 1;
+            if (currSlotVal > 11) {
+                currSlotVal = 1;
+                dayVal += 1;
+                if (dayVal > numDays) {
+                    dayVal = 1;
+                    weekVal += 1;
+                    if (weekVal > 4) {
+                        continue;
+                    }
+                }
+            }
+            int currTime = ((dayVal - 1) * 11) + currSlotVal + duration;
+            if (currTime > 50) {
+                currSlotVal = 1;
+                dayVal = 1;
+                weekVal += 1;
+                if (weekVal > 4) {
+                    continue;
+                }
+            }
+            selectedIds.add(empIds.get(i));
+            nextSlots.add(Arrays.asList(weekVal, dayVal, currSlotVal));
+        }
+        return new SelectedSlots(selectedIds, nextSlots);
+    }
+
+    public SelectedSlots getEndSlots(SelectedSlots startSlots, int numDays, int duration) {
+        List<List<Integer>> nextSlots = new ArrayList<>();
+        List<String> selectedIds = new ArrayList<>();
+        for (int i=0;i<startSlots.selectedSlots.size();i++) {
+            int endWeek = startSlots.selectedSlots.get(i).get(0);
+            int endDay = startSlots.selectedSlots.get(i).get(1);
+            int endSlot = startSlots.selectedSlots.get(i).get(2);
+            while (duration != 0) {
+                if (duration > (11 - endSlot)) {
+                    duration -= (11 - endSlot);
+                    endSlot = 1;
+                    endDay += 1;
+                    if (endDay > numDays) {
+                        endDay = 1;
+                        endWeek += 1;
+                    }
+                } else {
+                    duration = 0;
+                    endSlot = endSlot + duration;
+                }
+            }
+            selectedIds.add(startSlots.selectedIds.get(i));
+            nextSlots.add(Arrays.asList(endWeek, endDay, endSlot));
+        }
+        return new SelectedSlots(selectedIds, nextSlots);
     }
 
     public Cart ScheduleMaintainance(String vin, Cart cart, LoginContext loginContext) {
