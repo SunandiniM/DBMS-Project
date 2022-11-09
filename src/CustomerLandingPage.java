@@ -156,19 +156,22 @@ public class CustomerLandingPage {
                 DBConnection dbConn = DBConnection.getDBConnection();
                 dbConn.createConnection();
                 Statement stmt = dbConn.conn.createStatement();
-                String sql = "SELECT SE.ORDER_ID, S.SNAME, H.START_SLOT, H.END_SLOT, E.FNAME, E.LNAME," +
-                        " O.PRICE FROM SERVICE_EVENT SE, SERVICE S, OFFERS O, HOURLY_EMPLOYEE_SCHEDULE H, " +
-                        "EMPLOYEES E WHERE E.EMPID = H.EMPID AND S.SID = SE.SID AND S.SID = O.SID AND " +
-                        "H.ORDER_ID = SE.ORDER_ID AND SE.CID = " + loginContext.ID + " AND SE.SCID = " + loginContext.SCID;
+                String sql = "SELECT SE.SID, S.SNAME, SE.VIN_NO, O.PRICE, E.FNAME, E.LNAME, H.WEEK, H.DAY, H.START_SLOT, " +
+                        "H.END_SLOT FROM SERVICE_EVENT SE, SERVICE S, OFFERS O, VEHICLE V, EMPLOYEES E, " +
+                        "HOURLY_EMPLOYEE_SCHEDULE H WHERE SE.CID = " + loginContext.ID + " AND SE.SCID = " + loginContext.SCID +" AND SE.SID = O.SID " +
+                        "AND SE.SCID = O.SCID AND SE.SID = S.SID AND S.SID = O.SID AND V.VIN_NO = SE.VIN_NO AND " +
+                        "O.MFG = V.MFG AND H.SCID = SE.SCID AND H.ORDER_ID = SE.ORDER_ID AND E.EMPID = H.EMPID AND H.SCID = E.SCID";
                 System.out.println("QUERY : " + sql);
                 ResultSet rs = stmt.executeQuery(sql);
                 System.out.println("\n SERVICE HISTORY :");
-                System.out.println("INVOICE_ID, SNAME, START_SLOT, END_SLOT, MECHANIC NAME , PRICE");
+                System.out.println("SERVICE ID, SNAME, VIN_NO, PRICE, MECHANIC_NAME, WEEK, DAY, START_SLOT, END_SLOT");
                 while (rs.next()) {
-                    System.out.println(rs.getString(0) + " " + rs.getString(1) + " " + rs.getString(2) + " " +
+                    System.out.println(rs.getString(1) + " " + rs.getString(2) + " " +
                             rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) +  " " +
-                            rs.getString(6) + " " + rs.getString(7));
+                            rs.getString(6) + " " + rs.getString(7) + " " + rs.getString(8) +
+                            rs.getString(9) + rs.getString(10));
                 }
+                System.out.println("\n");
             } catch(Exception e) {
                 System.out.println("Failed to get service history");
                 System.out.println(e);
