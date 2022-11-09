@@ -275,3 +275,65 @@ begin
     end if;
 end avoidNonHourlyEmployees;
 /
+
+create or replace trigger checkMaxAndMinSalaries
+before insert or update on WORKSIN
+for each row
+declare
+    emp_role EMPLOYEES.EROLE%TYPE;
+    min_salary number;
+    max_salary number;
+    pay number;
+begin
+    SELECT MIN_WAGE INTO min_salary FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
+    SELECT MAX_WAGE INTO max_salary FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
+
+    if :new.PAY > max_salary OR :new.PAY < min_salary then
+        raise_application_error(-20000, 'Salary not in correct range');
+    end if;
+end checkMaxAndMinSalaries;
+/
+
+create or replace trigger checkOneReceptionistPerStore
+before insert or update on EMPLOYEES
+for each row
+declare
+    pragma autonomous_transaction;
+    count_ number;
+begin
+    SELECT COUNT(*) INTO count_ FROM EMPLOYEES WHERE SCID=:new.SCID and EROLE = 'RECEPTIONIST' GROUP BY SCID;
+    if count_ > 0 then
+        raise_application_error(-20000, 'Only one receptionist per store');
+    end if;
+end checkMaxAndMinSalaries;
+/
+
+create or replace trigger deactivateUserProfile
+after delete on OWNS
+for each row
+declare
+    pragma autonomous_transaction;
+    count_ number;
+begin
+    SELECT COUNT(*) INTO count_ FROM OWNS WHERE SCID=:old.SCID and CID=:old.CID GROUP BY CID, SCID;
+    if count_ = 0 then
+        UPDATE CUSTOMER SET PROFILE_STATUS = 0 WHERE SCID = :old.SCID AND CID = :old.CID;
+    end if;
+end deactivateUserProfile;
+/
+
+/*
+create or replace trigger invoiceAccountStatus
+after insert or update on INVOICE
+for each row
+declare
+    pragma autonomous_transaction;
+    count_ number;
+begin
+    SELECT COUNT(*) INTO count_ FROM INVOICE I, CUSTOMER C WHERE C.CID=:new.CID AND I.CID = :new.CID and I.STATUS = 0;
+    if count_ > 0 then
+        UPDATE CUSTOMER SET ACC_STATUS = 0 WHERE SCID = :new.SCID AND CID = :new.CID;
+    end if;
+end invoiceAccountStatus;
+/
+*/
