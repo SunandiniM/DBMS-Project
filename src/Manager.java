@@ -233,8 +233,6 @@ public class Manager {
                                 int dur = in.nextInt();
                                 try {
                                     sql = "INSERT INTO OFFERS VALUES ('" + rs.getString("SID") + "', '" + loginContext.SCID + "', '" + manf + "', '" + dur + "', '" + price + "')";
-                                    System.out.println("SQL Query");
-                                    System.out.println(sql);
                                     Statement stmt2 = dbConn.conn.createStatement();
                                     stmt2.executeUpdate(sql);
                                     System.out.println("Successfully added repair service price for service " + rs.getString("SID"));
