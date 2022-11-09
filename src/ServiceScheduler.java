@@ -47,8 +47,8 @@ public class ServiceScheduler {
                     cartObj = ScheduleRepairService(vinNumber, cartObj, loginContext);
                     break;
                 case 3:
-//                    ViewCartAndSelectScheduleTime(loginContext, cartObj);
                     viewCart(cartObj);
+                    ViewCartAndSelectScheduleTime(loginContext, cartObj);
                     break;
                 case 4:
                     return;
@@ -59,7 +59,7 @@ public class ServiceScheduler {
     }
 
     public void ViewCartAndSelectScheduleTime(LoginContext loginContext, Cart cart) {
-        System.out.println("Press 1 to continue with Scheduling");
+        System.out.println("Press 1 to Proceed with Scheduling");
         System.out.println("Press 2 to go back");
 
         Scanner in = new Scanner(System.in);
@@ -71,7 +71,7 @@ public class ServiceScheduler {
             case 2:
                 return;
             default:
-                ViewCartAndSelectScheduleTime(loginContext, cart);
+                break;
         }
     }
 
@@ -213,7 +213,6 @@ public class ServiceScheduler {
     }
 
     public void viewCart(Cart cartObj) {
-        Scanner in = new Scanner(System.in);
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
