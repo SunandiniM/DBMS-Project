@@ -363,6 +363,7 @@ public class ServiceScheduler {
         // assumes the cart is filled and has th
         int cost = cart.getTotalCost();
         int invoiceID = -1;
+        
         // First create the invoice -> generate the id, put cost as bill, status 0 -> unpaid
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
