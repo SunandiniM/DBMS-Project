@@ -99,11 +99,12 @@ public class ServiceScheduler {
             try {
                 DBConnection dbConn2 = DBConnection.getDBConnection();
                 Statement stmt2 = dbConn2.conn.createStatement();
-                String sql2 = "select PRICE from OFFERS o, VEHICLE v where v.VIN_NO='" +
+                String sql2 = "select PRICE, DURATION from OFFERS o, VEHICLE v where v.VIN_NO='" +
                         vin + "' and o.SCID=" + loginContext.SCID + " and o.SID=" + sid + " and o.MFG=v.MFG";
                 ResultSet rs2 = stmt2.executeQuery(sql2);
                 while (rs2.next()) {
                     cart.MaintenanceCost = rs2.getInt("PRICE");
+                    cart.MaintenanceDuration = rs2.getInt("DURATION");
                 }
             } catch(Exception e) {
                 System.out.println("Failed to fetch maintenance schedule details");
@@ -131,8 +132,10 @@ public class ServiceScheduler {
             }
             System.out.println("" + i + ". Go Back");
             int option = in.nextInt();
-            if (option == i) {
+            if (option == i || option < 0 || option > categories.size()) {
                 return cart;
+            } else {
+                return getServicesOfCategory(categories.get(option - 1), vin, cart, loginContext);
             }
         } catch(Exception e) {
             System.out.println("Failed to fetch repair schedule categories");
@@ -142,9 +145,37 @@ public class ServiceScheduler {
     }
 
     // IMPLEMENT THIS ONCE JDBC IS IMPLEMENTED
-    public Cart getServicesOfCategory(String category, Cart cart) {
-        // call JDBC to get all the repair services
-
+    public Cart getServicesOfCategory(String category, String vin, Cart cart, LoginContext loginContext) {
+//        select s.SNAME as SNAME from SERVICE S, REPAIR_SERVICE r, OFFERS o, VEHICLE v where v.VIN_NO='88TSM888' and v.MFG=o.MFG and o.scid=30003 and o.SID=s.SID and r.CATEGORY='Tire Services' and r.sid=s.sid;
+        Scanner in = new Scanner(System.in);
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "select s.SID as SID, s.SNAME as SNAME, o.PRICE as PRICE, o.DURATION as Duration from SERVICE S, REPAIR_SERVICE r, OFFERS o, VEHICLE v where v.VIN_NO='" + vin + "' and v.MFG=o.MFG and o.scid=" + loginContext.SCID + " and o.SID=s.SID and r.CATEGORY='" + category + "' and r.sid=s.sid";
+            ResultSet rs = stmt.executeQuery(sql);
+            int i = 1;
+            System.out.println("Enter your choice from below list");
+            List<List<String>> services = new ArrayList<>();
+            while (rs.next()) {
+                System.out.println("" + i + ". " + rs.getString("SNAME"));
+                services.add(Arrays.asList(rs.getString("SID"), rs.getString("PRICE"), rs.getString("DURATION")));
+                i++;
+            }
+            System.out.println("" + i + ". Go Back");
+            int option = in.nextInt();
+            if (option == i || option < 0 || option > services.size()) {
+                return cart;
+            } else {
+                cart.RepairServiceList.add(services.get(i).get(0));
+                cart.RepairServiceCostList.add(Integer.parseInt(services.get(i).get(1)));
+                cart.RepairServiceDurationList.add(Integer.parseInt(services.get(i).get(2)));
+            }
+        } catch(Exception e) {
+            System.out.println("Failed to fetch repair schedule categories");
+            System.out.println(e);
+        }
+        System.out.println(cart.toString());
         return cart;
     }
 }
