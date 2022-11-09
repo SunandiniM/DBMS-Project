@@ -100,7 +100,12 @@ public class ServiceScheduler {
 //                System.out.println("" + i + ". " + temp);
 //                i++;
             }
-            sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
+            if (empIdList.size() > 0) {
+                sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
+            } else {
+                sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC'";
+            }
+
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
