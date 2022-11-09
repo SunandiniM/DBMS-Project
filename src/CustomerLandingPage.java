@@ -104,7 +104,6 @@ public class CustomerLandingPage {
                     "I.ORDER_ID = " + order_id +" AND I.ORDER_ID = SE.ORDER_ID AND I.CID = SE.CID AND I.SCID = SE.SCID AND SE.SID = S.SID " +
                     "AND O.SCID = SE.SCID AND O.SID = S.SID AND V.VIN_NO = SE.VIN_NO AND V.MFG = O.MFG AND H.ORDER_ID = I.ORDER_ID " +
                     "AND H.SCID = I.SCID AND H.EMPID = E.EMPID";
-            System.out.println("QUERY : " + sql);
             ResultSet rs = stmt.executeQuery(sql);
             System.out.println("\n SERVICE HISTORY :");
             System.out.println("INVOICE_ID, SNAME, PRICE, MECHANIC_NAME, WEEK, DAY, START_SLOT, END_SLOT, INVOICE BILL, INVOICE STATUS");
@@ -164,7 +163,6 @@ public class CustomerLandingPage {
                         "HOURLY_EMPLOYEE_SCHEDULE H WHERE SE.CID = " + loginContext.ID + " AND SE.SCID = " + loginContext.SCID +" AND SE.SID = O.SID " +
                         "AND SE.SCID = O.SCID AND SE.SID = S.SID AND S.SID = O.SID AND V.VIN_NO = SE.VIN_NO AND " +
                         "O.MFG = V.MFG AND H.SCID = SE.SCID AND H.ORDER_ID = SE.ORDER_ID AND E.EMPID = H.EMPID AND H.SCID = E.SCID";
-                System.out.println("QUERY : " + sql);
                 ResultSet rs = stmt.executeQuery(sql);
                 System.out.println("\n SERVICE HISTORY :");
                 System.out.println("SERVICE ID, SNAME, VIN_NO, PRICE, MECHANIC_NAME, WEEK, DAY, START_SLOT, END_SLOT");

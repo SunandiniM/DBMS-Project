@@ -426,7 +426,6 @@ public class ServiceScheduler {
 
                         Statement stmt2 = dbConn.createConnection().createStatement();
                         sql = "UPDATE VEHICLE SET SCHEDULE = '" + cart.Maintainance + "' WHERE VIN_NO = '" + cart.vinNumber + "'";
-                        System.out.println(sql);
                         stmt2.executeUpdate(sql);
                 }
             }catch (Exception e) {

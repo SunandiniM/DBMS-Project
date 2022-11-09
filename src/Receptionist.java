@@ -86,7 +86,6 @@ public class Receptionist {
             String sql = "INSERT INTO CUSTOMER (SCID, FNAME, LNAME, ADDRESS, EMAIL, PHONE, USERNAME, ACC_STATUS, PROFILE_STATUS)" +
                     "VALUES (" + loginContext.SCID + ",'" + fname + "','" + lname + "','" + address + "','" + email + "'," +
                     phoneNumber + ",'" + username + "'," + "0" + "," + "1" +")";
-            System.out.println("CUSTOMER SQL " + sql);
             stmt.executeUpdate(sql);
         } catch(Exception e) {
             System.out.println("Failed to add customer profile" + e);
@@ -99,7 +98,6 @@ public class Receptionist {
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
             String sql = "SELECT CID FROM CUSTOMER WHERE FNAME = '" + fname + "'";
-            System.out.println("Find cust " + sql);
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 CID = rs.getString("CID");
@@ -114,7 +112,6 @@ public class Receptionist {
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
             String sql = "INSERT INTO VEHICLE VALUES ('" + vinNumber + "', " + year + ",'" + carMan + "', " + mileage + "," + "'N'" + ")";
-            System.out.println("Vehicle in : " + sql);
             stmt.executeUpdate(sql);
         }catch (Exception e) {
             System.out.println("Failed to add vehicle " + e);
