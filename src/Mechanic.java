@@ -30,19 +30,26 @@ public class Mechanic {
             switch (option) {
                 case 1:
                     ViewSchedule(loginContext);
+                    LandingPageMenu(loginContext);
                     break;
                 case 2:
                     RequestTimeOff(loginContext);
+                    LandingPageMenu(loginContext);
                     break;
                 case 3:
                     RequestSwap(loginContext);
+                    LandingPageMenu(loginContext);
                     break;
                 case 4:
                     AcceptRejectSwapRequests(loginContext);
+                    LandingPageMenu(loginContext);
                     break;
                 case 5:
+                    Login login = new Login();
+                    login.AskLogout();
                     return;
                 default:
+                    return;
             }
         }
     }

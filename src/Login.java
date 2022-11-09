@@ -63,7 +63,6 @@ public class Login {
     }
 
     public void AskLogout() {
-        System.out.println("Do you want to logout?");
         AskLogin();
     }
 }
