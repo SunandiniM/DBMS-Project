@@ -398,7 +398,7 @@ public class ServiceScheduler {
                         serviceID = 115;
                     }
                         Statement stmt = dbConn.createConnection().createStatement();
-                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID +")";
+                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + cart.vinNumber + ")";
                         System.out.println(sql);
                         stmt.executeUpdate(sql);
                 }
@@ -428,7 +428,7 @@ public class ServiceScheduler {
                 DBConnection dbConn = DBConnection.getDBConnection();
                 dbConn.createConnection();
                 Statement stmt = dbConn.conn.createStatement();
-                String sql = "INSERT INTO HOURLY_EMPLOYEE_SCHEDULE(SCID, ORDER_ID, EMP_ID, WEEK, DAY, START_SLOT, END_SLOT) VALUES ("
+                String sql = "INSERT INTO HOURLY_EMPLOYEE_SCHEDULE(SCID, ORDER_ID, EMPID, WEEK, DAY, START_SLOT, END_SLOT) VALUES ("
                         + loginContext.SCID + "," + invoiceId + ", " + startSlots.selectedIds.get(optionVal) + ", "
                         + startW + ", " + startD + ", " + startS + ", " + endVal + ")";
                 System.out.println(sql);
