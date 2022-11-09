@@ -17,6 +17,11 @@ drop table REPAIR_SERVICE;
 drop table SERVICE_CENTER;
 drop table SERVICE;
 
+-- drop trigger avoidNonHourlyEmployees;
+-- drop trigger avoidIncorrrectRepairCategory;
+-- drop trigger maintenanceHierarchy;
+-- drop trigger deactivateUserProfile
+
 
 create table SERVICE_CENTER(   
     SCID number(9) primary key,   
@@ -276,22 +281,22 @@ begin
 end avoidNonHourlyEmployees;
 /
 
-create or replace trigger checkMaxAndMinSalaries
-before insert or update on WORKSIN
-for each row
-declare
-    emp_role EMPLOYEES.EROLE%TYPE;
-    min_salary number;
-    max_salary number;
-    pay number;
-begin
-    SELECT MIN_WAGE INTO min_salary FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
-    SELECT MAX_WAGE INTO max_salary FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
+-- create or replace trigger checkMaxAndMinSalaries
+-- before insert or update on WORKSIN
+-- for each row
+-- declare
+--     emp_role EMPLOYEES.EROLE%TYPE;
+--     min_salary number;
+--     max_salary number;
+--     pay number;
+-- begin
+--     SELECT MIN_WAGE INTO min_salary FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
+--     SELECT MAX_WAGE INTO max_salary FROM SERVICE_CENTER S, EMPLOYEES E WHERE S.SCID=:new.SCID AND E.EMPID=:new.EMPID AND E.SCID=:new.SCID AND E.EROLE = 'MECHANIC';
 
-    if :new.PAY > max_salary OR :new.PAY < min_salary then
-        raise_application_error(-20000, 'Salary not in correct range');
-    end if;
-end checkMaxAndMinSalaries;
+--     if :new.PAY > max_salary OR :new.PAY < min_salary then
+--         raise_application_error(-20000, 'Salary not in correct range');
+--     end if;
+-- end checkMaxAndMinSalaries;
 /
 
 -- create or replace trigger checkOneReceptionistPerStore
