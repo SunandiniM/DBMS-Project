@@ -108,16 +108,11 @@ public class ServiceScheduler {
                     "(select MAX(H4.WEEK) from HOURLY_EMPLOYEE_SCHEDULE H4 where H4.SCID=" + loginContext.SCID + " and H4.EMPID=H1.EMPID))) and " +
                     "H1.EMPID in (select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EMPID=H1.EMPID and E.EROLE='MECHANIC')";
             ResultSet rs = stmt.executeQuery(sql);
-//            int i = 1;
-//            System.out.println("Time Slots");
             List<String> empIdList = new ArrayList<>();
             List<List<Integer>> currSlotDetails = new ArrayList<>();
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
                 currSlotDetails.add(Arrays.asList(rs.getInt("WEEK"), rs.getInt("DAY"), rs.getInt("END_SLOT")));
-//                String temp = rs.getString("SCID") + " " + rs.getString("EMPID") + " " + rs.getString("WEEK") + " " + rs.getString("DAY") + " " + rs.getString("END_SLOT");
-//                System.out.println("" + i + ". " + temp);
-//                i++;
             }
             if (empIdList.size() > 0) {
                 sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
@@ -129,9 +124,6 @@ public class ServiceScheduler {
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
                 currSlotDetails.add(Arrays.asList(1, 1, 0));
-//                String temp = loginContext.SCID + " " + rs.getString("EMPID") + " 0 0 0";
-//                System.out.println("" + i + ". " + temp);
-//                i++;
             }
             int numDays = 5;
             try {
@@ -179,7 +171,7 @@ public class ServiceScheduler {
             int dayVal = slots.get(i).get(1);
             int currSlotVal = slots.get(i).get(2);
             currSlotVal += 1;
-            if (currSlotVal > 11) {
+            if (currSlotVal > 11 || (11 - currSlotVal) < duration) {
                 currSlotVal = 1;
                 dayVal += 1;
                 if (dayVal > numDays) {
@@ -260,33 +252,43 @@ public class ServiceScheduler {
         } else {
             nextSchedule = "A";
         }
+        int cost = 0;
+        int serviceDuration = 0;
+        int sid = 113;
+        if (nextSchedule.equals("B")) {
+            sid = 114;
+        } else if (nextSchedule.equals("C")) {
+            sid = 115;
+        }
+        try {
+            DBConnection dbConn2 = DBConnection.getDBConnection();
+            Statement stmt2 = dbConn2.conn.createStatement();
+            String sql2 = "select PRICE, DURATION from OFFERS o, VEHICLE v where v.VIN_NO='" +
+                    vin + "' and o.SCID=" + loginContext.SCID + " and o.SID=" + sid + " and o.MFG=v.MFG";
+            ResultSet rs2 = stmt2.executeQuery(sql2);
+            while (rs2.next()) {
+                cost = rs2.getInt("PRICE");
+                serviceDuration = rs2.getInt("DURATION");
+            }
+        } catch(Exception e) {
+            System.out.println("Failed to fetch maintenance schedule details");
+            System.out.println(e);
+        }
+        if (cart.getTotalDuration() + serviceDuration > 11) {
+            System.out.println("Cannot Schedule this service as the total services duration exceeds 11 hours");
+        }
         Scanner in = new Scanner(System.in);
         System.out.println("Press 1 to add maintenance schedule " + nextSchedule + " in the cart");
         System.out.println("Press 2 to go back");
         int option = in.nextInt();
-        if (option == 1){
+        if (option == 1) {
+            if (cart.getTotalDuration() + serviceDuration > 11) {
+                System.out.println("Cannot Schedule this service as the total services duration exceeds 11 hours");
+                return cart;
+            }
             cart.Maintainance = nextSchedule;
-            cart.MaintenanceCost = 0;
-            int sid = 113;
-            if (nextSchedule.equals("B")) {
-                sid = 114;
-            } else if (nextSchedule.equals("C")) {
-                sid = 115;
-            }
-            try {
-                DBConnection dbConn2 = DBConnection.getDBConnection();
-                Statement stmt2 = dbConn2.conn.createStatement();
-                String sql2 = "select PRICE, DURATION from OFFERS o, VEHICLE v where v.VIN_NO='" +
-                        vin + "' and o.SCID=" + loginContext.SCID + " and o.SID=" + sid + " and o.MFG=v.MFG";
-                ResultSet rs2 = stmt2.executeQuery(sql2);
-                while (rs2.next()) {
-                    cart.MaintenanceCost = rs2.getInt("PRICE");
-                    cart.MaintenanceDuration = rs2.getInt("DURATION");
-                }
-            } catch(Exception e) {
-                System.out.println("Failed to fetch maintenance schedule details");
-                System.out.println(e);
-            }
+            cart.MaintenanceCost = cost;
+            cart.MaintenanceDuration = serviceDuration;
         }
         cart.vinNumber = vin;
         return cart;
@@ -347,6 +349,10 @@ public class ServiceScheduler {
             if (option == i || option < 0 || option > services.size()) {
                 return cart;
             } else {
+                if (cart.getTotalDuration() + Integer.parseInt(services.get(option - 1).get(2)) > 11) {
+                    System.out.println("Cannot Schedule this service as the total services duration exceeds 11 hours");
+                    return cart;
+                }
                 cart.RepairServiceList.add(services.get(option - 1).get(0));
                 cart.RepairServiceCostList.add(Integer.parseInt(services.get(option - 1).get(1)));
                 cart.RepairServiceDurationList.add(Integer.parseInt(services.get(option - 1).get(2)));
