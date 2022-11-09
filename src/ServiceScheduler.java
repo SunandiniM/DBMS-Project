@@ -91,8 +91,21 @@ public class ServiceScheduler {
             ResultSet rs = stmt.executeQuery(sql);
             int i = 1;
             System.out.println("Time Slots");
+            List<String> empIdList = new ArrayList<>();
+            List<List<Integer>> currSlotDetails = new ArrayList<>();
             while (rs.next()) {
+                empIdList.add(rs.getString("EMPID"));
+                currSlotDetails.add(Arrays.asList(rs.getInt("WEEK"), rs.getInt("DAY"), rs.getInt("END_SLOT")));
                 String temp = rs.getString("SCID") + " " + rs.getString("EMPID") + " " + rs.getString("WEEK") + " " + rs.getString("DAY") + " " + rs.getString("END_SLOT");
+                System.out.println("" + i + ". " + temp);
+                i++;
+            }
+            sql = "select EMPID from EMPLOYEES E where E.SCID=" + loginContext.SCID + " and E.EROLE='MECHANIC' AND empid not in (" + String.join(", ", empIdList) + ")";
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                empIdList.add(rs.getString("EMPID"));
+                currSlotDetails.add(Arrays.asList(1, 1, 1));
+                String temp = loginContext.SCID + " " + rs.getString("EMPID") + " 1 1 1";
                 System.out.println("" + i + ". " + temp);
                 i++;
             }
