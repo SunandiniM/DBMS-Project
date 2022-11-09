@@ -109,7 +109,7 @@ public class ServiceScheduler {
             rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 empIdList.add(rs.getString("EMPID"));
-                currSlotDetails.add(Arrays.asList(0, 0, 0));
+                currSlotDetails.add(Arrays.asList(1, 1, 0));
 //                String temp = loginContext.SCID + " " + rs.getString("EMPID") + " 0 0 0";
 //                System.out.println("" + i + ". " + temp);
 //                i++;
