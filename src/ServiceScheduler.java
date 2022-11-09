@@ -97,17 +97,17 @@ public class ServiceScheduler {
                 sid = 115;
             }
             try {
-                DBConnection dbConn = DBConnection.getDBConnection();
-                dbConn.createConnection();
-                Statement stmt = dbConn.conn.createStatement();
-                String sql = "select PRICE from OFFERS o, VEHICLE v where v.VIN_NO='" +
+                DBConnection dbConn2 = DBConnection.getDBConnection();
+                Statement stmt2 = dbConn2.conn.createStatement();
+                String sql2 = "select PRICE from OFFERS o, VEHICLE v where v.VIN_NO='" +
                         vin + "' and o.SCID=" + loginContext.SCID + " and o.SID=" + sid + " and o.MFG=v.MFG";
-                ResultSet rs = stmt.executeQuery(sql);
+                System.out.println(sql2);
+                ResultSet rs2 = stmt2.executeQuery(sql2);
                 System.out.print("We are here");
-                while (rs.next()) {
+                while (rs2.next()) {
                     System.out.print("We are here 2");
-                    System.out.println(rs.getString("PRICE"));
-                    cart.MaintenanceCost = rs.getInt("PRICE");
+                    System.out.println(rs2.getString("PRICE"));
+                    cart.MaintenanceCost = rs2.getInt("PRICE");
                 }
                 System.out.println(cart.Maintainance);
                 System.out.println(cart.MaintenanceCost);
