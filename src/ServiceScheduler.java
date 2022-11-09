@@ -132,8 +132,10 @@ public class ServiceScheduler {
             SelectedSlots nextEndSlots = getEndSlots(nextStartSlots, numDays, duration);
             System.out.println("Enter the time slot number of your choice");
             for (int i=0;i<nextEndSlots.selectedIds.size();i++) {
+                System.out.println("--------------------------------------------------------------------------");
                 String timeStr = nextStartSlots.selectedSlots.get(i).get(0) + ", " + nextStartSlots.selectedSlots.get(i).get(1) + ", " + nextStartSlots.selectedSlots.get(i).get(2);
                 System.out.println("Time Slot " + (i + 1));
+                System.out.println("Mechanic ID: " + nextEndSlots.selectedIds.get(i));
                 System.out.println("Start week, day, hour: " + timeStr);
                 timeStr = nextEndSlots.selectedSlots.get(i).get(0) + ", " + nextEndSlots.selectedSlots.get(i).get(1) + ", " + nextEndSlots.selectedSlots.get(i).get(2);
                 System.out.println("End week, day, hour: " + timeStr);

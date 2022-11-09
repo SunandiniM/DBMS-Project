@@ -17,30 +17,33 @@ class Pair {
 
 public class Mechanic {
     public void LandingPageMenu(LoginContext loginContext) {
-        System.out.println("Enter 1 to View Schedule");
-        System.out.println("Enter 2 to Request Time Off");
-        System.out.println("Enter 3 to Request Swap");
-        System.out.println("Enter 4 to Accept or Reject Swap");
-        System.out.println("Enter 5 to Logout");
+        while (true) {
+            System.out.println("Enter 1 to View Schedule");
+            System.out.println("Enter 2 to Request Time Off");
+            System.out.println("Enter 3 to Request Swap");
+            System.out.println("Enter 4 to Accept or Reject Swap");
+            System.out.println("Enter 5 to Logout");
 
-        Scanner in = new Scanner(System.in);
-        int option = in.nextInt();
+            Scanner in = new Scanner(System.in);
+            int option = in.nextInt();
 
-        switch (option) {
-            case 1:
-                ViewSchedule(loginContext);
-                LandingPageMenu(loginContext);
-            case 2:
-                RequestTimeOff(loginContext);
-                LandingPageMenu(loginContext);
-            case 3:
-                RequestSwap(loginContext);
-                LandingPageMenu(loginContext);
-            case 4:
-                AcceptRejectSwapRequests(loginContext);
-                LandingPageMenu(loginContext);
-            case 5:
-            default:
+            switch (option) {
+                case 1:
+                    ViewSchedule(loginContext);
+                    break;
+                case 2:
+                    RequestTimeOff(loginContext);
+                    break;
+                case 3:
+                    RequestSwap(loginContext);
+                    break;
+                case 4:
+                    AcceptRejectSwapRequests(loginContext);
+                    break;
+                case 5:
+                    return;
+                default:
+            }
         }
     }
 
@@ -49,14 +52,21 @@ public class Mechanic {
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             Connection conn = dbConn.createConnection();
-            String sql1 = "SELECT * FROM HOURLY_EMPLOYEE_SCHEDULE WHERE SCID = " + loginContext.SCID + " AND EMPID = " + loginContext.ID;
 
-//            System.out.println("Query : " + sql1);
+            String sql = "select ORDER_ID,  min(WEEK) as start_week, min(DAY) as start_day, min(START_SLOT) as start_slot," +
+                    " max(WEEK) as end_week, max(DAY) as end_day, max(END_SLOT) as end_slot from HOURLY_EMPLOYEE_SCHEDULE" +
+                    " where EMPID=" + loginContext.ID + " and SCID=" + loginContext.SCID + " group by ORDER_ID;";
+
             Statement stmt = dbConn.conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql1);
-
+            ResultSet rs = stmt.executeQuery(sql);
+            System.out.println("Below is the Employee Schedule");
             while(rs.next()) {
-                // print the order_id, week, starting slot, ending slot
+                System.out.println("--------------------------------------------------------------------------");
+                System.out.println("Order Id: " + rs.getString("ORDER_ID"));
+                String timeStr = rs.getString("start_week") + ", " + rs.getString("start_day") + ", " + rs.getString("start_slot");
+                System.out.println("Start Time Slot(Week, Day, Slot): " + timeStr);
+                timeStr = rs.getString("end_week") + ", " + rs.getString("end_day") + ", " + rs.getString("end_slot");
+                System.out.println("End Time Slot(Week, Day, Slot): " + timeStr);
             }
 
 
