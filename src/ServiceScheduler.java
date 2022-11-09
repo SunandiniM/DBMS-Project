@@ -398,7 +398,7 @@ public class ServiceScheduler {
                         serviceID = 115;
                     }
                         Statement stmt = dbConn.createConnection().createStatement();
-                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + cart.vinNumber + ")";
+                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + cart.vinNumber + "')";
                         System.out.println(sql);
                         stmt.executeUpdate(sql);
                 }
