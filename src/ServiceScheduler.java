@@ -1,5 +1,6 @@
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class ServiceScheduler {
@@ -163,7 +164,7 @@ public class ServiceScheduler {
 
     public void SubmitOrder(LoginContext loginContext, Cart cart) {
         // assumes the cart is filled and has th
-        int cost = cart.giveTotalCost();
+        int cost = cart.getTotalCost();
         int invoiceID = -1;
         // First create the invoice -> generate the id, put cost as bill, status 0 -> unpaid
         try {
@@ -184,8 +185,33 @@ public class ServiceScheduler {
             System.out.println("Failed to add in OWNED_BY" + e);
         }
 
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            try{
+                for (int i = 0; i < cart.RepairServiceList.size(); i++) {
+                    String serviceID = cart.RepairServiceListID.get(i);
+                    Statement stmt = dbConn.createConnection().createStatement();
+                    String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID +")";
+                    stmt.executeUpdate(sql);
+                }
+            }catch (Exception e) {
+                System.out.println("Failed to put in service event " + e);
+            }
+        }catch (Exception e) {
+            System.out.println("Trying to update service event " + e);
+        }
 
-
-
+        MechanicFreeSlot mechanicFreeSlot = (new Mechanic().getFreeSlot(cart.duration));
+        try {
+            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn.createConnection();
+            Statement stmt = dbConn.conn.createStatement();
+            String sql = "INSERT INTO HOURLY_EMPLOYEE_SCHEDULE VALUES ("+ loginContext.SCID + "," + invoiceID + "," +
+                    mechanicFreeSlot.EMPID + ", " + mechanicFreeSlot.week + "," + mechanicFreeSlot.day + "," + mechanicFreeSlot.startSlot + "," + mechanicFreeSlot.endSlot + ")";
+            stmt.executeUpdate(sql);
+            System.out.println("Successfully added a new customer profile");
+        }catch (Exception e) {
+            System.out.println("Failed to add in OWNED_BY" + e);
+        }
     }
 }
