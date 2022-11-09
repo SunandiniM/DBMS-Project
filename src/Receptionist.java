@@ -83,8 +83,9 @@ public class Receptionist {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
-            String sql = "INSERT INTO CUSTOMER (SCID, FNAME, LNAME, USERNAME, ACC_STATUS, PROFILE_STATUS)" +
-                    "VALUES (" + loginContext.SCID + ",'" + fname + "','" + lname + "','" + username + "'," + "0" + "," + "1" +")";
+            String sql = "INSERT INTO CUSTOMER (SCID, FNAME, LNAME, ADDRESS, EMAIL, PHONE, USERNAME, ACC_STATUS, PROFILE_STATUS)" +
+                    "VALUES (" + loginContext.SCID + ",'" + fname + "','" + lname + "','" + address + "','" + email + "'," +
+                    phoneNumber + ",'" + username + "'," + "0" + "," + "1" +")";
             System.out.println("CUSTOMER SQL " + sql);
             stmt.executeUpdate(sql);
         } catch(Exception e) {
