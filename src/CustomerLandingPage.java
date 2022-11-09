@@ -125,6 +125,7 @@ public class CustomerLandingPage {
                     "AND O.SCID = SE.SCID AND O.SID = S.SID AND V.VIN_NO = SE.VIN_NO AND V.MFG = O.MFG AND H.ORDER_ID = I.ORDER_ID " +
                     "AND H.SCID = I.SCID AND H.EMPID = E.EMPID";
             ResultSet rs = stmt.executeQuery(sql);
+            System.out.println(sql);
             System.out.println("\n SERVICE HISTORY :");
             System.out.println("INVOICE_ID, SNAME, PRICE, MECHANIC_NAME, WEEK, DAY, START_SLOT, END_SLOT, INVOICE BILL, INVOICE STATUS");
             while (rs.next()) {

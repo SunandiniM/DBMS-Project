@@ -67,7 +67,7 @@ public class ServiceScheduler {
                     cartObj = ScheduleRepairService(vinNumber, cartObj, loginContext);
                     break;
                 case 3:
-                    ViewCartAndSelectScheduleTime(loginContext, cartObj);
+                    ViewCartAndSelectScheduleTime(vinNumber, loginContext, cartObj);
                     break;
                 case 4:
                     return;
@@ -77,7 +77,7 @@ public class ServiceScheduler {
         }
     }
 
-    public void ViewCartAndSelectScheduleTime(LoginContext loginContext, Cart cart) {
+    public void ViewCartAndSelectScheduleTime(String vin, LoginContext loginContext, Cart cart) {
 
         viewCart(cart);
 
@@ -89,15 +89,15 @@ public class ServiceScheduler {
 
         switch (option) {
             case 1:
-                ChooseSlots(loginContext, cart);
+                ChooseSlots(vin, loginContext, cart);
             case 2:
                 return;
             default:
-                ViewCartAndSelectScheduleTime(loginContext, cart);
+                ViewCartAndSelectScheduleTime(vin, loginContext, cart);
         }
     }
 
-    public void ChooseSlots(LoginContext loginContext, Cart cart) {
+    public void ChooseSlots(String vin, LoginContext loginContext, Cart cart) {
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
@@ -155,7 +155,7 @@ public class ServiceScheduler {
             Scanner in = new Scanner(System.in);
             int option = in.nextInt();
             System.out.println("Selected timeslot is " + option);
-            SubmitOrder(loginContext, cart, nextStartSlots, nextEndSlots, option, numDays);
+            SubmitOrder(loginContext, cart, nextStartSlots, nextEndSlots, option, numDays, vin);
             System.out.println("Booked Slot and Invoice generated");
         } catch(Exception e) {
             System.out.println("Failed to fetch slots");
@@ -385,7 +385,7 @@ public class ServiceScheduler {
         }
     }
 
-    public void SubmitOrder(LoginContext loginContext, Cart cart, SelectedSlots startSlots, SelectedSlots endSlots, int optionVal, int numDays) {
+    public void SubmitOrder(LoginContext loginContext, Cart cart, SelectedSlots startSlots, SelectedSlots endSlots, int optionVal, int numDays, String vin) {
         // assumes the cart is filled and has th
         int cost = cart.getTotalCost();
         int invoiceID = -1;
@@ -413,10 +413,13 @@ public class ServiceScheduler {
                 for (int i = 0; i < cart.RepairServiceList.size(); i++) {
                     String serviceID = cart.RepairServiceList.get(i);
                     Statement stmt = dbConn.createConnection().createStatement();
-                    String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + cart.vinNumber + "')";
+                    String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + vin + "')";
                     System.out.println(sql);
                     stmt.executeUpdate(sql);
                 }
+
+                System.out.println("Cart maintainance flag is " + cart.Maintainance);
+
                 if (!cart.Maintainance.equals("")) {
                     int serviceID = 0;
                     if (cart.Maintainance.equals("A")){
@@ -427,11 +430,11 @@ public class ServiceScheduler {
                         serviceID = 115;
                     }
                         Statement stmt = dbConn.createConnection().createStatement();
-                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + cart.vinNumber + "')";
+                        String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + vin + "')";
                         stmt.executeUpdate(sql);
 
                         Statement stmt2 = dbConn.createConnection().createStatement();
-                        sql = "UPDATE VEHICLE SET SCHEDULE = '" + cart.Maintainance + "' WHERE VIN_NO = '" + cart.vinNumber + "'";
+                        sql = "UPDATE VEHICLE SET SCHEDULE = '" + cart.Maintainance + "' WHERE VIN_NO = '" + vin + "'";
                         stmt2.executeUpdate(sql);
                 }
             }catch (Exception e) {
