@@ -47,7 +47,6 @@ public class ServiceScheduler {
                     cartObj = ScheduleRepairService(vinNumber, cartObj, loginContext);
                     break;
                 case 3:
-                    viewCart(cartObj);
                     ViewCartAndSelectScheduleTime(loginContext, cartObj);
                     break;
                 case 4:
@@ -59,7 +58,10 @@ public class ServiceScheduler {
     }
 
     public void ViewCartAndSelectScheduleTime(LoginContext loginContext, Cart cart) {
-        System.out.println("Press 1 to Proceed with Scheduling");
+
+        viewCart(cart);
+
+        System.out.println("Press 1 to continue with Scheduling");
         System.out.println("Press 2 to go back");
 
         Scanner in = new Scanner(System.in);
@@ -71,15 +73,15 @@ public class ServiceScheduler {
             case 2:
                 return;
             default:
-                break;
+                ViewCartAndSelectScheduleTime(loginContext, cart);
         }
     }
 
     public void ChooseSlots(LoginContext loginContext, Cart cart) {
         Mechanic mechanic = new Mechanic();
-        ArrayList<MechanicFreeSlot> freeSlots = mechanic.getFreeSlot(loginContext, cart.getTotalDuration());
+//        ArrayList<MechanicFreeSlot> freeSlots = mechanic.getFreeSlot(loginContext, cart.getTotalDuration());
 
-        Scanner in = new Scanner(System.in);
+  /*      Scanner in = new Scanner(System.in);
         for (int i = 0; i < freeSlots.size(); i++) {
             System.out.println("Press " + i + " to select slot #" + i);
             MechanicFreeSlot x = freeSlots.get(i);
@@ -88,6 +90,10 @@ public class ServiceScheduler {
 
         int slotNumber = in.nextInt();
         SubmitOrder(loginContext, cart, freeSlots.get(slotNumber));
+
+   */
+        MechanicFreeSlot sample = new MechanicFreeSlot();
+        SubmitOrder(loginContext, cart, sample);
     }
 
     public Cart ScheduleMaintainance(String vin, Cart cart, LoginContext loginContext) {
@@ -213,6 +219,7 @@ public class ServiceScheduler {
     }
 
     public void viewCart(Cart cartObj) {
+        Scanner in = new Scanner(System.in);
         try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
@@ -298,7 +305,7 @@ public class ServiceScheduler {
 
         // show the user and get the slots
 
-        try {
+        /*try {
             DBConnection dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
             Statement stmt = dbConn.conn.createStatement();
@@ -308,6 +315,6 @@ public class ServiceScheduler {
             stmt.executeUpdate(sql);
         }catch (Exception e) {
             System.out.println("Failed to add in HOURLY_EMPLOYEE_SCHEDULE" + e);
-        }
+        }*/
     }
 }
