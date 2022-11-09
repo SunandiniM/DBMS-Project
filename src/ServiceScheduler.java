@@ -60,11 +60,12 @@ public class ServiceScheduler {
 
     public Cart ScheduleMaintainance(String vin, Cart cart, LoginContext loginContext) {
         String nextSchedule = "A";
-
+        DBConnection dbConn;
+        Statement stmt;
         try {
-            DBConnection dbConn = DBConnection.getDBConnection();
+            dbConn = DBConnection.getDBConnection();
             dbConn.createConnection();
-            Statement stmt = dbConn.conn.createStatement();
+            stmt = dbConn.conn.createStatement();
             String sql = "select SCHEDULE from VEHICLE where VIN_NO='" + vin + "'";
             ResultSet rs = stmt.executeQuery(sql);
             if (rs != null && rs.isBeforeFirst()) {
@@ -101,16 +102,10 @@ public class ServiceScheduler {
                 Statement stmt2 = dbConn2.conn.createStatement();
                 String sql2 = "select PRICE from OFFERS o, VEHICLE v where v.VIN_NO='" +
                         vin + "' and o.SCID=" + loginContext.SCID + " and o.SID=" + sid + " and o.MFG=v.MFG";
-                System.out.println(sql2);
                 ResultSet rs2 = stmt2.executeQuery(sql2);
-                System.out.print("We are here");
                 while (rs2.next()) {
-                    System.out.print("We are here 2");
-                    System.out.println(rs2.getString("PRICE"));
                     cart.MaintenanceCost = rs2.getInt("PRICE");
                 }
-                System.out.println(cart.Maintainance);
-                System.out.println(cart.MaintenanceCost);
             } catch(Exception e) {
                 System.out.println("Failed to fetch maintenance schedule details");
                 System.out.println(e);
