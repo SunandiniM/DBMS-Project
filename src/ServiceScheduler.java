@@ -202,8 +202,8 @@ public class ServiceScheduler {
                         endWeek += 1;
                     }
                 } else {
-                    currDurration = 0;
                     endSlot = endSlot + currDurration;
+                    currDurration = 0;
                 }
             }
             selectedIds.add(startSlots.selectedIds.get(i));
