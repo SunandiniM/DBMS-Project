@@ -7,6 +7,7 @@ public class Cart {
     public ArrayList<String> RepairServiceList;
     public ArrayList<Integer> RepairServiceCostList;
     public ArrayList<Integer> RepairServiceDurationList;
+    public  String vinNumber;
 
     public Cart() {
         Maintainance = "";
@@ -15,6 +16,7 @@ public class Cart {
         RepairServiceList = new ArrayList<String>();
         RepairServiceCostList = new ArrayList<Integer>();
         RepairServiceDurationList = new ArrayList<Integer>();
+        vinNumber = "";
     }
 
     public String getServicesList() {

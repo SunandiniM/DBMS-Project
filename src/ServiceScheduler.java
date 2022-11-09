@@ -150,6 +150,8 @@ public class ServiceScheduler {
                 System.out.println(e);
             }
         }
+
+        cart.vinNumber = vin;
         return cart;
     }
 
@@ -180,6 +182,7 @@ public class ServiceScheduler {
             System.out.println("Failed to fetch repair schedule categories");
             System.out.println(e);
         }
+        cart.vinNumber = vin;
         return cart;
     }
 
@@ -268,7 +271,7 @@ public class ServiceScheduler {
                 for (int i = 0; i < cart.RepairServiceList.size(); i++) {
                     String serviceID = cart.RepairServiceList.get(i);
                     Statement stmt = dbConn.createConnection().createStatement();
-                    String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID +")";
+                    String sql = "INSERT INTO SERVICE_EVENT VALUES(" + invoiceID + "," + loginContext.SCID + "," + loginContext.ID + "," + serviceID + ",'" + cart.vinNumber + "')";
                     System.out.println(sql);
                     stmt.executeUpdate(sql);
                 }

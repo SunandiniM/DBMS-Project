@@ -1,3 +1,5 @@
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class CustomerLandingPage {
@@ -58,10 +60,32 @@ public class CustomerLandingPage {
         System.out.println("Press 1 to see service history or anything else to go back");
         Scanner in = new Scanner(System.in);
         int option = in.nextInt();
+        in.nextLine();
         if (option == 1) {
             System.out.println("Enter the CAR's VIN number");
             String vinNumber = in.nextLine();
             // make a JDBC call to get the service history
+            try {
+                DBConnection dbConn = DBConnection.getDBConnection();
+                dbConn.createConnection();
+                Statement stmt = dbConn.conn.createStatement();
+                String sql = "SELECT SE.ORDER_ID, S.SNAME, H.START_SLOT, H.END_SLOT, E.FNAME, E.LNAME," +
+                        " O.PRICE FROM SERVICE_EVENT SE, SERVICE S, OFFERS O, HOURLY_EMPLOYEE_SCHEDULE H, " +
+                        "EMPLOYEES E WHERE E.EMPID = H.EMPID AND S.SID = SE.SID AND S.SID = O.SID AND " +
+                        "H.ORDER_ID = SE.ORDER_ID AND SE.CID = " + loginContext.ID + " AND SE.SCID = " + loginContext.SCID;
+                System.out.println("QUERY : " + sql);
+                ResultSet rs = stmt.executeQuery(sql);
+                System.out.println("\n SERVICE HISTORY :");
+                System.out.println("INVOICE_ID, SNAME, START_SLOT, END_SLOT, MECHANIC NAME , PRICE");
+                while (rs.next()) {
+                    System.out.println(rs.getString(0) + " " + rs.getString(1) + " " + rs.getString(2) + " " +
+                            rs.getString(3) + " " + rs.getString(4) + " " + rs.getString(5) +  " " +
+                            rs.getString(6) + " " + rs.getString(7));
+                }
+            } catch(Exception e) {
+                System.out.println("Failed to get service history");
+                System.out.println(e);
+            }
         }else{
             return;
         }
