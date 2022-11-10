@@ -26,6 +26,15 @@ VALUES(30002, 987654321, 'Rachel', 'Brooks', '2201 Gorman Parkwood, Raleigh, NC 
 INSERT INTO EMPLOYEES 
 VALUES(30003, 987612345, 'Caleb', 'Smith', '1538 Red Bud Lane, Morrisville, NC 27560', 'csmith@yahoo.com', 8547963210, 'MANAGER', 'CalebSmith');
 
+INSERT INTO EMPLOYEES
+VALUES(30001, 879123456, 'Pam', 'Goldsmith', '2518 University Woods, Raleigh, NC 27612', 'pamgsmith@gmail.com', 879123456, 'RECEPTIONIST', 'PamGoldsmith');
+
+INSERT INTO EMPLOYEES 
+VALUES(30002, 897123456, 'Olivia', 'Dunne', '2514 Gorman Parkwood, Raleigh, NC 27618', 'oliviaD@ymail.com', 897123456, 'RECEPTIONIST', 'OliviaDunne');
+
+INSERT INTO EMPLOYEES 
+VALUES(30003, 897612345, 'Kate', 'Bishop', '2522 Red Bud Lane, Morrisville, NC 27560', 'kateB@yahoo.com', 897612345, 'RECEPTIONIST', 'KateBishop');
+
 INSERT INTO EMPLOYEES 
 VALUES(30001, 132457689, 'James', 'Williams', '1400 Gorman St, Raleigh, NC 27606-2972', 'jwilliams@gmail.com', 4576312882, 'MECHANIC', 'JamesWilliams');
 
